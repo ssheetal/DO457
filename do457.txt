@@ -1,33 +1,6 @@
 
 
 
-Welcome to DO457
-Ansible with Network
-
-Nav   or   Navdeep
-
-Reading UK
-
-2012  
-
-Hobbies	Travel Gone, Staying Alive 2020
-
-
-Name
-Company if possible
-Experience    with Linux, Network,  ansible(if any)
-Expectation
-City/Time/Timezone
-Hobbies
-
-
-
-Linux:
-
-ssh  cp rm mkdir grep vim(nano indentation will be hard)
-
-
-
 Chapter 1:
  
 Refer Diagram
