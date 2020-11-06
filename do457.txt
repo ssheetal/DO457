@@ -1,0 +1,501 @@
+
+
+
+Welcome to DO457
+Ansible with Network
+
+Nav   or   Navdeep
+
+Reading UK
+
+2012  
+
+Hobbies	Travel Gone, Staying Alive 2020
+
+
+Name
+Company if possible
+Experience    with Linux, Network,  ansible(if any)
+Expectation
+City/Time/Timezone
+Hobbies
+
+
+
+Linux:
+
+ssh  cp rm mkdir grep vim(nano indentation will be hard)
+
+
+
+Chapter 1:
+ 
+Refer Diagram
+
+
+Installation and subscription:
+
+
+
+
+subscription-manager repos --enable=rhel-7-server-ansible-2-rpms
+yum install ansible
+
+
+Documentation:
+
+## To see all Modules
+
+	ansible-doc -l   
+
+## Folder for python Modules
+
+ls -l /usr/lib/python2.7/site-packages/ansible/modules/
+
+Plugins:
+
+ansible-doc -t SOMETHING_STUPID -l //to see all plugins
+ansible-doc -t connection -l
+
+ansible-doc -t connection network_cli
+
+
+
+
+Ansible File and Data Formats
+It helps to be familiar with the file and data formats used by Ansible. Here is a list of formats,
+broken down with sublists describing where each format is used:
+• INI format
+– The Ansible configuration file, ansible.cfg
+– Inventory files (inventory files may also use YAML format)
+• YAML
+– Playbook files
+– Inventory files, optionally
+– Other included files, such as role files
+• JSON
+– The ansible-playbook program returns variable data in JSON form
+
+
+
+Inventory:
+INI or YAML format:
+
+
+	INI Format:
+vim inventory
+
+[spines]
+spine01
+spine02
+
+[leafs]
+leaf[01:08]
+
+[ip_range]
+192.168.1.[1:20]
+
+ansible-inventory shows you how finl variable and system at the of execution of playbook:
+
+ansible-inventory --list	//JSON format
+ansible-inventory --graph
+ansible-inventory --graph group
+ansible-inventory --host host
+ansible-inventory --list --yaml -i INI_inventory_file
+
+ansible -i inventory --list-hosts spine*
+
+
+
+
+
+
+
+Ansible configuration File:
+
+Default File:		/etc/ansible/ansible.cfg
+User file:		~/.ansible.cfg
+Project specific:	./ansible.cfg
+Define Env Variable:	ANSIBLE_CONFIG      #=/tmp/ansible.config
+
+
+## To see all variables and section refer 
+vim /etc/ansible/ansible.cfg
+
+## Sample ansible config file ## commonly used parameters
+
+cat $CURRENT_PATH/ansible.cfg
+inventory = PATH of inventory file/folder
+remote_user= USER_NAME of ssh connection
+log_path= CUSTOM_LOG_FILE_PATH
+forks=
+library=
+ask_pass= True
+gathering=implicit/explicit  //for fact gathering
+
+[privilege_escalation]
+#become=True
+#become_method=sudo/su/enable/runas
+#become_user=root
+#become_ask_pass=False
+
+# custom timeout values to accommodate slow 1000V VM
+command_timeout = 180
+connect_timeout = 100
+connect_retry_timeout = 100
+
+
+ForksSerial
+
+
+
+
+	forks						serial
+1.	ansible.cfg					playbook
+	ansible-plabyook a.yml --forks=4
+2.	Manage number of threads/load			control no of systems updating at same time
+	 on control node
+3.	task by task					host by host/play by play
+
+
+The serial keyword can also be specified as a percentage, which will be applied to the total number of hosts in a play, in order to determine the number of hosts per pass:
+
+Forks: inventory 10
+Playbook: 3 tasks
+Forks 4		Horizontal Direction
+
+	S1	S2	S3	S4		S5	S6	S7	S8		S9 	S10
+	1	1	1	1		1	1	1	1		1	1
+	2	2	2	2		2	2	2	2		2	2
+	3	3	3	3		3	3	3	3		3	3
+
+	
+Serial: 3 Vertical Direction
+	S1	S2	S3			S4	S5	S6		S7	S8	S9	 	S10
+	T1	T1	T1			1	1	1		1	1	1		1
+	2	2	2			2	2	2		2	2	2		2
+	3	3	3			3	3	3		3	3	3		3
+	
+	
+	
+
+		CHAPTER 2:
+Ad-Hoc Commands:
+
+
+ansible host-pattern -m module [-a 'module arguments'] [-i inventory]
+
+ansible spine*-m vyos_ping  -a "dest=ip-address"
+
+
+## Setup Ansible indentation format in vim
+
+	vim ~/.vimrc
+	autocmd FileType yaml setlocal ai ts=2 sw=2 et
+	set cuc
+
+Playbook: ## For more variables Refer cheat-sheet.yml
+
+- name: Name/Purpose of Playbook
+  hosts:
+  - host1
+  - host2
+  connection: network_cli
+  gather_facts: no
+  tasks:
+  - name: gather ios_facts
+    ios_config:
+      backup: yes
+    register: version
+
+
+				###############  Instructions to Run Playbook ###############
+
+
+###############  Step 1:  Check Syntax of Playbook ###############
+
+ansible-playbook install_httpd.yml --syntax-check
+
+
+###############  Step 2:  Run Playbook in Simulation Mode (DRY RUN) ###############
+###############  Step 2:  This Step only check in playbook if tasks will make any changes in managed hosts or not if run in read mode ###############
+
+ansible-playbook install_httpd.yml --check
+
+				#### OR ####
+
+ansible-playbook install_httpd.yml -C
+
+
+###############  Step 3:  Run Playbook in Read Mode ###############
+
+ansible-playbook install_httpd.yml 
+
+
+Other Usefull ansible-playbook commands:
+
+ansible-playbook abc.yml --list-hosts
+
+ansible-playbook abc.yml --list-tasks
+ansible-playbook abc.yml --list-tags
+
+
+REGISTERED VARIABLES:
+register: variable
+store output of current task whch can be used as conditional output for future task
+
+
+## Multiple Play in one playbook
+
+
+- name: First VYOS Playbook
+  hosts: vyos
+  connection: network_cli
+  gather_facts: no
+  tasks:
+  - name: gather vyos_facts
+    vyos_config:
+      backup: yes
+    register: version
+    
+- name: Second IOS Playbook
+  hosts: ios
+  connection: network_cli
+  gather_facts: no
+  tasks:
+  - name: gather ios_facts
+    ios_config:
+      backup: yes
+    register: version
+
+
+
+	Chapter 3:
+
+		Scope of Variables:
+1 <  2  < 3
+
+1.	Host Scope
+
+	A.	Group_inventory: 		inventory File_ group variable		use = symbol
+	B.	Group_group_vars_folder: 	groups_vars/{{groupname}}(.yml)		use : symbol
+	C.	inventory File_ server variable		use = symbol
+	D.	host_vars/{{servername}}		use : symbol
+
+2. 	Play Scope (Playbook)
+	A.	vars:
+	
+		
+	B.	vars_files:
+		- file_path
+	C. 	Vars_Prompt:
+		
+	D:	Task Scope:
+		vars:
+		  variable_name: "Value"  ## For that Specific Task
+			
+3.	Global Scope (Command Line Values)
+	A.	ansible-playbook abc.yml -e 'var_name=some_value' 
+
+
+
+Roles:
+
+Reusability for a purpose
+	3 type of roles:
+1. Private/Custom/Oraganization Roles		Local system
+2. Public Roles					ansible-galaxy
+3. Subscribed Roles				RedHat
+
+
+
+
+1. Pre  Tasks			pre_tasks/
+2. Pre  Handlers		pre_tasks/notified_handlers
+3. Dependency Role Tasks (firewall) vyos_user_role/tasks/main.yml
+4. Main Role Tasks (webserver) vyos_interface_role/tasks/main.yml
+5. extra tasks in playbook	use_roles.yml tasks section> tasks
+6. Dependency Role Handlers	vyos_user_role/handlers/main.yml
+7. Main Role Handlers		vyos_interface_role/handlers/main.yml
+8. extra handlers involed by tasks in playbook use_roles.yml handlers section  
+9. Post  Tasks				post_tasks/		
+10. Post Check Handlers			post_tasks/notified -> handlers
+
+
+
+
+
+
+Import (import_tasks, import_role)
+static inclusion of tasks(you know tasks in advance)
+ansible-playbook abc.yml --syntax-check    ## also check syntax of imported Task file
+4  task in external file ## Condition checked on all task one by one althoug condition ias false
+--start-at-task can be used to start execution of playbook at certain point
+Might take more time
+
+
+include (include_tasks, include_role)
+Dynamic inclusion of tasks(you DO NOT know tasks in advance)
+ansible-playbook abc.yml --syntax-check    ## DOES NOT check syntax of included Task file
+4  task in external file ## Condition checked only once, if false file tasks are not included in execution of playbook
+--start-at-task does n't work as task names are NOT known in advance
+Time efficient
+
+
+import_playbook: playbook can only be imported NOT included
+
+
+ansible.cfg
+roles_path=/path_of_roles_folder
+
+
+
+
+
+	Chapter 4:
+	
+Ansible Vault:
+		Create/Encrypt File:
+
+ansible-vault create secret.yml							//new File
+ansible-vault create secret.yml	--vault-password-file=somepass.txt		//new File
+ansible-vault encrypt secret.yml						//Existing File Prompt
+ansible-vault encrypt secret.yml --vault-password-file=somepass.txt		//Existing File from some file
+ansible-vault view secret.yml							//see File ## vim will not work
+ansible-vault decrypt secret.yml --output=without_secret.yml			//decrypt File
+ansible-vault edit secret.yml							//change contents File
+ansible-vault rekey secret.yml							//change current password to new one
+ansible-vault encrypt_string vyos						//Encrypt password
+
+
+
+		Run a Encrypted File:
+		
+ansible-playbook secret.yml --ask-vault-pass	//single password on one file
+
+	//Multiple password on one file
+	
+ansible-playbook secret.yml --vault-id 1@prompt --vault-id 2@prompt --vault-id 3@prompt --vault-id 4@prompt
+
+
+Dynamic Inventory:
+
+Scripts are written in Python normally. bash 
+https://github.com/ansible/ansible/tree/stable-2.9/contrib/inventory
+
+
+ansible-inventory
+ansible or ansible-playbook requires inventory. Lot of variables/Lots os scripts
+
+Final Runtime Env/hosts presented, if you want to see ansible-inventory to see final host with variables
+
+
+
+
+
+Joe and Dennis Owner
+
+Japsper Network Admin
+
+Company Startup: Router in Cloud with VM
+
+Expansion Phase: 
+Corporate Phase
+Branch Opened
+
+
+ansible-doc ios_facts
+	    junos-Facos
+		arista_facts
+		vros
+Run a Job:
+1. Inventory
+2. Playbook Folder(Manual Copy/Git SCM) on Tower
+3. Change permission to awx:awx /var/lib/awx/projects/your_folder
+4. Project maps to your_playbook_folder (Project <-> one_folder) One to one Mapping
+5. Credentials ANsible Config
+6. Job Template
+7. RBAC User 
+
+
+
+
+
+
+
+
+
+
+
+
+
+	ping
+ios_ping vyos_ping
+
+	ios_interface		//Physical State enable /disable  
+	ios_l3_interface	//change IP Address
+	
+
+
+	ios_command
+	vyof_command		//excute command like command module
+Will find find source code
+
+
+
+
+- name: backup the device configuration
+ios_config:
+backup: yes
+- name: look at device health indicators
+ios_command:
+commands:
+# this provides hostname and uptime
+- sh ver | include uptime
+- sh ip domain
+- sh clock
+- sh ip name-server
+- sh proc mem | include Total
+register: results
+- name: show results
+debug:
+msg: "{{ item }}"
+loop: "{{ results.stdout_lines }}"
+
+
+- name: "set domain name to {{ domain_name }}"
+ios_config:
+lines:
+- "ip domain-name {{ domain_name }}"
+
+
+tasks:
+- name: Test reachability to 172.25.250.8
+ios_ping:
+dest: 172.25.250.8
+
+- name: label outside interface
+ios_interface:
+name: GigabitEthernet2
+description: outside
+
+- name: backup config
+vyos_config:
+backup: yes
+- name: look at system elements
+vyos_command:
+commands:
+- sh host name
+- sh system uptime
+- sh host domain
+- sh host date
+- sh host os
+register: results
+- name: show results
+debug:
+var: results.stdout
+
+
+
+
+
+
