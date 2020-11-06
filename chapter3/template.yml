@@ -1,0 +1,31 @@
+- name: Template Demo
+  hosts: spine01
+  gather_facts: no
+  vars:
+    inter:
+    - eth0
+    - eth1
+
+  tasks:
+  - name: Collect Facts
+    vyos_facts:
+
+  - name: Collect Information about Devices with template
+    template:
+      src: ./mytempo.j2 
+      dest: /tmp/information
+
+  #- name: Create commands with template ## 2 steps procedure
+  #  template:
+  #    src: ./mycommands.j2 
+  #    dest: /tmp/commands.txt
+
+  #- name: Run Commands
+  #  vyos_command:
+  #    commands: "{{ lookup('file','/tmp/commands.txt') }}"
+
+  - name: Run commands without file ## Without commands text file
+    vyos_command:
+      commands: "{{ lookup('template','mycommands.j2') }}"
+    
+    

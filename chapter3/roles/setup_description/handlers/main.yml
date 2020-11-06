@@ -1,0 +1,5 @@
+---
+# handlers file for setup_description
+- name: interface_handler
+  debug:
+    msg: "Completing interface description"

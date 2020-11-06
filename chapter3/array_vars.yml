@@ -1,0 +1,5 @@
+complex_var:
+- name: eth0
+  desc: "Ethernet1"
+- name: eth1
+  desc: "Ethernet2"

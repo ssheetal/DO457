@@ -1,0 +1,13 @@
+- name: Variable Demo
+  hosts: spines
+  vars_files:
+  - ./my_vars.yml                     ## Play Scope   Step 6
+  vars:
+    some_var: "from_playbook_please"  ## Play Scope   Step 5
+  tasks:
+  - name: Print Vaiable
+    vyos_interface:
+      name: eth0
+      description: "{{ some_var }}"
+		vars:
+			some_var: "Task_Level_Value"    ## Play Scope   Step 7

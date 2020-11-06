@@ -1,0 +1,23 @@
+Variables are defined based on priority STEPS, Please comment one by one and try yourself
+
+		Scope of Variables:
+1 <  2  < 3
+
+1.	Host Scope
+
+Step 1: 	inventory File_ group variable		use = symbol
+Step 2: 	groups_vars/{{groupname}}		use : symbol
+Step 3: 	inventory File_ server variable		use = symbol
+Step 1: 	host_vars/{{servername}}		use : symbol
+
+2. 	Playbook Scope
+Step 5:		vars:
+Step 6:		vars_files:
+		- file_path
+Step 7:		Task Scope:
+		vars:
+		  variable_name: "Value"  ## For that Specific Task
+			
+3.	Global Scope (Command Line Values)
+Step 8:		ansible-playbook variabel_demo.yml -e 'some_var=some_value' 
+

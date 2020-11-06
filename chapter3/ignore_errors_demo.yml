@@ -1,0 +1,21 @@
+- name: Conditional statements in Playbook
+  hosts: spine01
+  tasks:
+  - name: Collect Facts
+    vyos_facts:
+
+  - name: print facts
+    debug:
+      msg: "{{ansible_net_hostname}}"
+
+  - name: Change Description
+    vyos_interface:
+      name: eth0000000   ## ERROR Here
+      description: "Some_value"
+    ignore_errors: true ## Continue to next task, Ignore this task
+
+  - name: Create User based on condition
+    vyos_user:
+      name: ansible
+      configured_password: password
+      state: present

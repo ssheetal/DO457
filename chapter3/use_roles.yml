@@ -1,0 +1,45 @@
+- name: Use Roles Demo
+  hosts: spine01
+
+  post_tasks:
+  - name: Post Cleanup
+    debug:
+      msg: "CLean your log and mess"
+    register: out_post
+    changed_when: out_post.changed == false
+    notify:
+    - post handler
+
+  roles:
+  - role: web_server
+    some_content: "Capita Systems in Playbook\n"
+
+  tasks:
+  - name: My Extra Task
+    debug:
+      msg: "EXTRA EXTRA"
+    register: out_extra
+    changed_when: out_extra.changed == false
+    notify:
+    - extra handler
+
+
+  pre_tasks:
+  - name: Pre Check CObndition
+    debug:
+      msg: "PREEEEEEEEEEe"
+    register: out_pre
+    changed_when: out_pre.changed == false
+    notify:
+    - pre handler
+
+  handlers:
+  - name: extra handler
+    debug:
+      msg: "Extraaa"
+  - name: pre handler
+    debug:
+      msg: "preeee"
+  - name: post handler
+    debug:
+      msg: "posttt"

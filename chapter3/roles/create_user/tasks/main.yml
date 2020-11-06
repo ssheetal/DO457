@@ -1,0 +1,10 @@
+---
+# tasks file for create_user
+- name: Create User based on condition
+  vyos_user:
+    name: "{{ user_name }}"
+    configured_password: "{{ user_password }}"
+    state: present
+  notify:
+  - handler 1
+  - handler 2

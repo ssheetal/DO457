@@ -1,0 +1,13 @@
+
+[control]
+workstation.lab.example.com
+
+
+[spines]
+spine0[1:2]
+
+[leafs]
+leaf0[1:2]
+
+[cloud]
+cs01

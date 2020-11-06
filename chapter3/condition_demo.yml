@@ -1,0 +1,25 @@
+- name: Conditional statements in Playbook
+  hosts: spine01
+  tasks:
+  - name: Collect Facts
+    vyos_facts:
+
+  - name: print facts
+    debug:
+      msg: "{{ansible_net_hostname}}"
+
+  - name: Change Description
+    vyos_interface:
+      name: eth0
+      description: "Some_value"
+    register: capture_output
+
+  - name: Create User based on condition
+    vyos_user:
+      name: ansible
+      configured_password: password
+      state: present
+    when: ## List of condition is "and" operator 
+    - ansible_net_hostname == "vyos" or ansible_net_model == "OpenStack"
+    - capture_output.changed == true
+

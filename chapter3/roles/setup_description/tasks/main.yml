@@ -1,0 +1,8 @@
+---
+# tasks file for setup_description
+- name: Change Description
+  vyos_interface:
+    name: eth0
+    description: "{{ eth_desc }}"
+  notify:
+  - interface_handler

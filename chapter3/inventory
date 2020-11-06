@@ -1,0 +1,17 @@
+
+[control]
+workstation.lab.example.com
+
+
+[spines]
+spine01		some_var="Value3" //Level 3
+spine02
+
+[spines:vars]
+some_var: "Value1"   //Level 1
+
+[leafs]
+leaf0[1:2]
+
+[cloud]
+cs01

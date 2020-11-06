@@ -1,0 +1,10 @@
+- name: Complex Variables Demo
+  hosts: servera.lab.example.com
+  vars_files:
+  - ./array_vars.yml
+  tasks:
+  - name: Print Variable
+    vyos_interface:
+      name: "{{ item.name }}"
+      description: "{{ item.desc }}"
+    loop: "{{ complex_var }}"

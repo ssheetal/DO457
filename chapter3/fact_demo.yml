@@ -1,0 +1,11 @@
+- name: Variable Demo
+  hosts: spines
+  gather_facts: no    ## Disable default "setup" module facts
+  tasks:
+  - name: Collect Facts
+    vyos_facts:
+
+  - name: Print Facts
+    debug:
+      msg: "{{ ansible_net_model }}"
+    when: ansible_net_hostname == "vyos"

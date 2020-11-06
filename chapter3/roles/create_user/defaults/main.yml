@@ -1,0 +1,5 @@
+---
+# defaults file for create_user
+
+user_name: "ansible"
+user_password: "somepassword"

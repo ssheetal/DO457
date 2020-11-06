@@ -1,0 +1,13 @@
+- name: back up config from a VyOS device
+  hosts: spine01
+  tasks:
+  - name: back up config
+    vyos_config:
+      backup: yes
+
+- name: back up config from a IOS device
+  hosts: cs01
+  tasks:
+  - name: back up config
+    ios_config:
+      backup: yes

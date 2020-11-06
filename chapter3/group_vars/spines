@@ -1,0 +1,1 @@
+some_var: "from_group_vars_level"  ## Host Scope   Level2

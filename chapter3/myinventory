@@ -1,0 +1,9 @@
+[dev]
+servera.lab.example.com some_var="AnotherServerA Inventory" 		## Host Scope   Step 3
+serverb.lab.example.com
+serverc.lab.example.com
+
+
+[dev:vars]
+some_var=inventory_group_level_data  					## Host Scope   Step 1
+

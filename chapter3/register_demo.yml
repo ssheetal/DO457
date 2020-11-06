@@ -1,0 +1,21 @@
+- name: Register Demo
+  hosts: servera.lab.example.com
+  become: true
+  remote_user: devops
+  tasks:
+  - name: Install httpd package
+    yum:
+      name: httpd
+      state: latest
+    register: capture_out   ## Store Output in variable
+  - name: Print capture output
+    debug:
+      var: capture_out
+      #var: capture_out.changed
+      #msg: "{{ capture_out.changed }}"
+  - name: Start httpd service
+    service:
+      name: httpd
+      state: started
+    when: capture_out.changed == true
+		## Use Register Variable to apply Conditions
