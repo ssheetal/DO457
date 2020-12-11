@@ -1,0 +1,22 @@
+- name: Debug Strategy Playbook
+  hosts: servera.lab.example.com
+  strategy: debug
+  tasks:
+  - name: I am installing httpd
+    yum:
+      name: httpddddd
+      state: latest
+# task.args
+# task.args['name']='httpd
+# task.args
+# redo
+
+  - name: Let's start httpd service
+    service:
+      name: httddddpd
+      stateeeeeee: started
+# task.args
+# task.args['name']='httpd          ## value correction
+# task.args['state']='started'      ## add new option
+# del(task.args['stateeeeeee'])     ## delete current wrong option
+

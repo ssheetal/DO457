@@ -52,6 +52,7 @@
     - condition3 #LIST DESCRIBES (and) OPERATOR
     failed_when: CONDITION
     changed_when: CONDITION
+    register: some_output
     ignore_errors: true/false
     become: true/false
     vars:

@@ -76,7 +76,7 @@ ansible-inventory --host host
 ansible-inventory --list --yaml -i INI_inventory_file
 
 ansible -i inventory --list-hosts spine*
-
+https://stackoverflow.com/questions/33363023/is-there-any-option-to-list-groups-in-ansible#:~:text=If%20you%20just%20want%20a,the%20names%20of%20the%20groups.
 
 
 
@@ -117,7 +117,7 @@ connect_timeout = 100
 connect_retry_timeout = 100
 
 
-ForksSerial
+Forks vs Serial
 
 
 
@@ -132,6 +132,8 @@ ForksSerial
 
 The serial keyword can also be specified as a percentage, which will be applied to the total number of hosts in a play, in order to determine the number of hosts per pass:
 
+Strategy:
+
 Forks: inventory 10
 Playbook: 3 tasks
 Forks 4		Horizontal Direction
@@ -140,6 +142,8 @@ Forks 4		Horizontal Direction
 	1	1	1	1		1	1	1	1		1	1
 	2	2	2	2		2	2	2	2		2	2
 	3	3	3	3		3	3	3	3		3	3
+	4	4	4	4		4	4	4	4		4	4
+	5	5	5	5		5	5	5	5		5	5
 
 	
 Serial: 3 Vertical Direction
@@ -147,8 +151,23 @@ Serial: 3 Vertical Direction
 	T1	T1	T1			1	1	1		1	1	1		1
 	2	2	2			2	2	2		2	2	2		2
 	3	3	3			3	3	3		3	3	3		3
+	4	4	4			4	4	4		5
+	5	5	5			5	5	5
 	
 	
+	forks overrise serial  or serial overrides forks  NONE
+	
+	forks= how many task i can run at one time			10
+	serial: how many nodes you want to upgrade in parallel		25  
+	T1	10,10,5
+	T2	10,10,5	
+	T3	10,10,5
+	T4	10,10,5
+	
+
+Actual RAM requirements vary based on how many hosts Tower will manage simultaneously (which is controlled by the forks parameter in the job template or the system ansible.cfg file). To avoid possible resource conflicts, Ansible recommends 4 GB of memory per 100 forks. For example, if forks is set to 100, 4 GB of memory is recommended; if forks is set to 400, 16 GB of memory is recommended.
+
+https://docs.ansible.com/ansible-tower/latest/html/installandreference/requirements_refguide.html	
 	
 
 		CHAPTER 2:
@@ -199,7 +218,7 @@ ansible-playbook install_httpd.yml --check
 ansible-playbook install_httpd.yml -C
 
 
-###############  Step 3:  Run Playbook in Read Mode ###############
+###############  Step 3:  Run Playbook in Real Mode ###############
 
 ansible-playbook install_httpd.yml 
 
@@ -249,7 +268,7 @@ store output of current task whch can be used as conditional output for future t
 
 1.	Host Scope
 
-	A.	Group_inventory: 		inventory File_ group variable		use = symbol
+	A.	Group_inventory: 		inventory File_ group variable		use = symbol (if using ini format inventory)
 	B.	Group_group_vars_folder: 	groups_vars/{{groupname}}(.yml)		use : symbol
 	C.	inventory File_ server variable		use = symbol
 	D.	host_vars/{{servername}}		use : symbol
@@ -274,6 +293,9 @@ store output of current task whch can be used as conditional output for future t
 Roles:
 
 Reusability for a purpose
+
+mysql_setup,web_server,ip_juniper,VLAN_cisco
+
 	3 type of roles:
 1. Private/Custom/Oraganization Roles		Local system
 2. Public Roles					ansible-galaxy
@@ -390,7 +412,7 @@ Run a Job:
 7. RBAC User 
 
 
-
+Forks Serial Tags --limit 
 
 
 
