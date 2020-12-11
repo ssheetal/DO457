@@ -133,6 +133,9 @@ Forks vs Serial
 The serial keyword can also be specified as a percentage, which will be applied to the total number of hosts in a play, in order to determine the number of hosts per pass:
 
 Strategy:
+https://docs.ansible.com/ansible/latest/user_guide/playbooks_strategies.html
+
+
 
 Forks: inventory 10
 Playbook: 3 tasks
