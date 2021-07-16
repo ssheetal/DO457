@@ -6,6 +6,7 @@
   become_user: USERNAME
   become_method: sudo/whatever
   strategy: debug #for debugging on the run
+  gather_facts: yes/no
   vars:
     myvars:
     - var1: value
@@ -47,6 +48,9 @@
       # task.args['module_option3']="value2" // added another option
       # del(task.args['module_opt1']) //delete option
       module_option2:
+    loop: "{{ some_list }}"
+    with_dict: "{{ some_dict}}"
+    with_sequence: start=0 end=5 format=testuser%02x
     when:
     - condition1 or condition2
     - condition3 #LIST DESCRIBES (and) OPERATOR
