@@ -10,6 +10,12 @@ Ansible 2.5
 First 3 days Lecture/Practise
 Last 2 Days Only Labs
 
+Name
+Company/Org If possible
+Experience Linux(cp mkdir mv rm ssh vim) Ansible Network IOS
+Expectation
+Hobbies/
+
 CS01		IOS	OS
 Rest4		Vyos	OS
 
@@ -17,8 +23,12 @@ Chapter 1:
  
 Refer Diagram
 
-
-
+		Community  				Enterprise
+		ansible.org				redhat.com
+		Free					Paid
+		Dev/Test				Production
+		Lot of time/No Money			Lot of Money/No Time
+		AWX					Ansible Tower
 
 Installation and subscription:
 
@@ -41,7 +51,7 @@ ls -l /usr/lib/python2.7/site-packages/ansible/modules/
 
 Plugins:
 
-Anything NOT avaiable as module, is available as Plugin
+Anything NOT available as module, is available as Plugin
 ansible-doc -t SOMETHING_STUPID -l //to see all plugins
 ansible-doc -t connection -l
 
@@ -109,8 +119,10 @@ Project specific:	./ansible.cfg					Level 3
 Define Env Variable:	ANSIBLE_CONFIG      #=/tmp/ansible.config	Level 4
 
 
+ANSIBLE_STDOUT_CALLBACK=yaml ansible-playbook abc.yaml
 
-Ansible.cfg is read first
+
+ansible.cfg is read first
 
 ## To see all variables and section refer 
 vim /etc/ansible/ansible.cfg
@@ -169,13 +181,16 @@ Forks=4		Horizontal Direction
 	T4	T4	T4	T4		T4	T4	T4	T4		T4	T4
 	T5	T5	T5	T5		T5	T5	T5	T5		T5	T5
 	
+	
 Serial: 3 Vertical Direction
 	S1	S2	S3			S4	S5	S6		S7	S8	S9	 	S10
 	T1	T1	T1			T1	T1	T1
 	2	2	2			2	2	2
-	3	3	3			3	3	3
+	3	3	3			3	3	3			
 	4	4	4			4	4	4
 	5	5	5			5	5	5
+	
+	
 	
 	
 	forks overrise serial  or serial overrides forks  NONE
@@ -289,14 +304,14 @@ store output of current task whch can be used as conditional output for future t
 		Scope of Variables:
 1 <  2  < 3
 
-1.	Host Scope
+1.	Host Scope		// Inventory File , groups_vars, host_vars
 
 	A.	Group_inventory: 		inventory File_ group variable		use = symbol (if using ini format inventory)
 											[groupname:vars]
 											var1="somevalue"
 											
 	B.	Group_group_vars_folder: 	groups_vars/{{groupname}}(.yml)		use : symbol
-	C.	inventory File_ server variable		use = symbol
+	C.	host inventory variable		use = symbol
 	D.	host_vars/{{servername}}.yml		use : symbol
 
 2. 	Play Scope (Playbook)
@@ -329,7 +344,7 @@ hosts: 		// exposing inventory
 
 	Roles:
 reusability
-roles basedd on purpose: httpd php  juniper_user  ios_user mysql  postgresq
+roles based on purpose: httpd php VYOS_NETWORK juniper_user  ios_user mysql  postgresql
 
 Dev
 web_server
@@ -349,7 +364,7 @@ FTP MYSQL ios domain IP system configuration  Update OS
 mysql_setup,web_server,ip_juniper,VLAN_cisco
 
 	3 type of roles:
-1. Private/Custom/Oraganization Roles		Local system
+1. Private/Custom/Oraganization Roles		Local system/within Org
 2. Public Roles					ansible-galaxy
 3. Subscribed Roles				RedHat
 
@@ -363,7 +378,7 @@ mysql_setup,web_server,ip_juniper,VLAN_cisco
 5. extra tasks in playbook	use_roles.yml tasks section> tasks
 6. Dependency Role Handlers	vyos_user_role/handlers/main.yml
 7. Main Role Handlers		vyos_interface_role/handlers/main.yml
-8. extra handlers involed by tasks in playbook use_roles.yml handlers section  
+8. extra handlers involved by tasks in playbook use_roles.yml handlers section  
 9. Post  Tasks				post_tasks/		
 10. Post  Handlers			post_tasks/notified -> handlers
 
@@ -378,7 +393,7 @@ ansible-playbook abc.yml --syntax-check    ## also check syntax of imported Task
 4  task in external file ## Condition checked on all task one by one althoug condition ias false
 --start-at-task can be used to start execution of playbook at certain point
 Might take more time
-
+for Development Environment
 
 include (include_tasks, include_role)
 Dynamic inclusion of tasks(you DO NOT know tasks in advance)
@@ -386,13 +401,13 @@ ansible-playbook abc.yml --syntax-check    ## DOES NOT check syntax of included 
 4  task in external file ## Condition checked only once, if false file tasks are not included in execution of playbook
 --start-at-task does n't work as task names are NOT known in advance
 Time efficient
-
+for Production Environment
 
 import_playbook: playbook can only be imported NOT included
 
 
 ansible.cfg
-roles_path=/path_of_roles_folder
+roles_path=/path_of_roles_folder:/second_folder:/third_folder
 
 
 
@@ -413,14 +428,16 @@ ansible-vault encrypt secret.yml --vault-password-file=somepass.txt		//Existing 
 ansible-vault view secret.yml							//see File ## vim will not work
 ansible-vault decrypt secret.yml --output=without_secret.yml			//decrypt File
 ansible-vault edit secret.yml							//change contents File
-ansible-vault rekey secret.yml							//change current password to new one
+ansible-vault rekey secret.yml 							//change current password to new one
+ansible-vault rekey secret.yml 	--vault-password-file=pass1.txt --new-vault-password-file=pass2.txt //Non-Interactive
 ansible-vault encrypt_string vyos						//Encrypt password
 
 
 
 		Run a Encrypted File:
 		
-ansible-playbook secret.yml --ask-vault-pass	//single password on one file
+ansible-playbook secret.yml --ask-vault-pass				//single password on all files //Interactive
+ansible-playbook secret.yml --vault-password-file=pass1.txt		//single password on all files //Non-Interactive
 
 	//Multiple password on one file
 	
@@ -588,7 +605,6 @@ Block Demo
 try catch finally
 
 block rescue always
-
-
+rescue: if there is an error on block task, it will come to rescue
 
 
