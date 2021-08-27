@@ -1,0 +1,13 @@
+- name: Order Demo Playbook
+  hosts: all
+  order: sorted ##sorted/reverse_sorted/inventory/reverse_inventory/shuffle
+  tasks:
+  - name: Print Task 1  
+    debug:
+      msg: "Debug Task 1"
+  - name: Print Task 2 
+    debug:
+      msg: "Debug Task 2"
+
+## Commands
+## ansible-playbook order_demo.yml --forks=1

@@ -2,22 +2,41 @@
 
 Welcome to DO457 Red Hat Ansible for Network Automation
 
-Navdeep
-Nav		#deep
-
 Ansible 2.5
+Little Ansible Tower
 
-First 3 days Lecture/Practise
-Last 2 Days Only Labs
+Navdeep
+
+Nav   #Deep
+
+Reading UK
+
+
+
+First 3 days Lecture/Practise		Chapter 1-4 Lecture
+Last 2 Days Only Labs			Chapter 5-6 Exercises
+
+
 
 Name
 Company/Org If possible
-Experience Linux(cp mkdir mv rm ssh vim) Ansible Network IOS
+Experience Linux RHCSA (cp mkdir mv rm ssh vim), Ansible, Network Devices IOS VYOS Junos
 Expectation
-Hobbies/
+Hobbies
+City/Timezone 
+Ale   		GMT-3
+David		MST
+Doug		CST	
+Fernando	Argentina
+Ken 		EST
+Michael 	CST
+Will		CST
 
-CS01		IOS	OS
-Rest4		Vyos	OS
+
+CS01			IOS			admin/student
+Rest4			Vyos			vyos/vyos		
+spine01-02,leaf01-02
+Server01-03		Redhat Linux		Prod Application deployed
 
 Chapter 1:
  
@@ -57,7 +76,7 @@ ansible-doc -t connection -l
 
 ansible-doc -t connection network_cli
 
-
+ansible-doc -t inventory -l
 
 
 Ansible File and Data Formats
@@ -113,6 +132,8 @@ https://stackoverflow.com/questions/33363023/is-there-any-option-to-list-groups-
 
 Ansible configuration File:
 
+ansible --version
+
 Default File:		/etc/ansible/ansible.cfg			Level 1
 User file:		~/.ansible.cfg					Level 2
 Project specific:	./ansible.cfg					Level 3
@@ -159,7 +180,7 @@ Forks vs Serial
 1.	ansible.cfg(default 5)				playbook
 	ansible-plabyook a.yml --forks=4
 2.	Manage number of threads/load			control no of systems updating at same time
-	 on control node
+	 on control node (save Control Node)
 3.	task by task					host by host/play by play
 
 
@@ -171,7 +192,7 @@ https://docs.ansible.com/ansible/latest/user_guide/playbooks_strategies.html
 
 
 Forks: inventory 10
-Playbook: 5 tasks
+Playbook: 4 tasks
 Forks=4		Horizontal Direction
 
 	S1	S2	S3	S4		S5	S6	S7	S8		S9 	S10
@@ -182,14 +203,23 @@ Forks=4		Horizontal Direction
 	T5	T5	T5	T5		T5	T5	T5	T5		T5	T5
 	
 	
+	
+	
+	
 Serial: 3 Vertical Direction
 	S1	S2	S3			S4	S5	S6		S7	S8	S9	 	S10
 	T1	T1	T1			T1	T1	T1
-	2	2	2			2	2	2
-	3	3	3			3	3	3			
-	4	4	4			4	4	4
-	5	5	5			5	5	5
+	T2	T2	T2			T2	T2	T2
+	T3	T3	T3			T3	T3	T3
+	T4	T4	T4			T4	T4	T4
+	T5	T5	T5			T5	T5	T5
 	
+	
+				
+				T2	T2	T2
+				T3	T3	T3
+				T4	T4	T4
+				T5	T5	T5
 	
 	
 	
@@ -303,6 +333,7 @@ store output of current task whch can be used as conditional output for future t
 
 		Scope of Variables:
 1 <  2  < 3
+Role Scope:
 
 1.	Host Scope		// Inventory File , groups_vars, host_vars
 
@@ -316,7 +347,7 @@ store output of current task whch can be used as conditional output for future t
 
 2. 	Play Scope (Playbook)
 	A.	vars:
-	B. 	Vars_Prompt:	
+	B. 	Vars_Prompt:	// prompt user to enter value //Interactive // Good for Dev
 		
 	C.	vars_files:
 		- file_path
@@ -326,10 +357,20 @@ store output of current task whch can be used as conditional output for future t
 		  variable_name: "Value"  ## For that Specific Task
 	E. 	Set Fact
 			set_fact:
-				var1: "Some value you want to override"	
+			  var1: "Some value you want to override"	
 3.	Global Scope (Command Line Values)
-	A.	ansible-playbook abc.yml -e 'var_name=some_value' 
+	A.	ansible-playbook abc.yml -e 'var_name=some_value var2=someValue2 var3=someValue3' 
 
+//Share Inventory Variables
+
+Dev 		Test		QA		Prod
+group_vars/
+host_vars/
+
+//No Share/Not Same Values
+vars_files:
+
+DICT Reverse Traverse by Defulat //Question
 
 
 Roles:
@@ -347,9 +388,15 @@ reusability
 roles based on purpose: httpd php VYOS_NETWORK juniper_user  ios_user mysql  postgresql
 
 Dev
+
+4 VYOS_SETUP
+15 OracleDatabase
+10 Netwotk_security
+11 Application Deployment
+
 web_server
 network-security
-Find_all_devices -> Prerequisites -> Netowrking -> Web server 
+Find_all_devices -> Prerequisites -> Networking -> Web server -> Security -> Inform_Stake_Holders
 
 Test
 
@@ -390,7 +437,7 @@ mysql_setup,web_server,ip_juniper,VLAN_cisco
 Import (import_tasks, import_role)
 static inclusion of tasks(you know tasks in advance)
 ansible-playbook abc.yml --syntax-check    ## also check syntax of imported Task file
-4  task in external file ## Condition checked on all task one by one althoug condition ias false
+4  task in external file ## Condition checked on all task one by one although condition is false
 --start-at-task can be used to start execution of playbook at certain point
 Might take more time
 for Development Environment
@@ -422,9 +469,9 @@ Ansible Vault:
 		Create/Encrypt File:
 
 ansible-vault create secret.yml							//new File Interactive
-ansible-vault create secret.yml	--vault-password-file=somepass.txt		//new File
+ansible-vault create secret.yml	--vault-password-file=somepass.txt		//new File // Non Interactive
 ansible-vault encrypt secret.yml						//Existing File Prompt
-ansible-vault encrypt secret.yml --vault-password-file=somepass.txt		//Existing File from some file
+ansible-vault encrypt secret.yml --vault-password-file=somepass.txt		//Existing File from some file Non Interactive
 ansible-vault view secret.yml							//see File ## vim will not work
 ansible-vault decrypt secret.yml --output=without_secret.yml			//decrypt File
 ansible-vault edit secret.yml							//change contents File
@@ -488,7 +535,7 @@ Free			Paid Support
 
 
 Run a Job:		
-1. Inventory
+1. Inventory and Group/Host Variables
 2. Playbook Folder(Manual Copy/Git SCM) on Tower	:	Copy Playbooks from workstation to Tower Machine
 3. Change permission to awx:awx /var/lib/awx/projects/your_folder
 4. Project maps to your_playbook_folder (Project <-> one_folder) One to one Mapping
@@ -554,7 +601,12 @@ ios_config:
 lines:
 - "ip domain-name {{ domain_name }}"
 
+Strategy
+debug strategy should only be used at development stage
+forks=4
+linear			free
 
+Linear:
 tasks:
 - name: Test reachability to 172.25.250.8
 ios_ping:
@@ -584,7 +636,7 @@ var: results.stdout
 
 
 Tags
-SYstem provided tags: all,always,never,untagged
+System provided tags: all,always,never,untagged
 rest are user named tags
 
 Strategy
@@ -607,4 +659,4 @@ try catch finally
 block rescue always
 rescue: if there is an error on block task, it will come to rescue
 
-
+Handlers: 

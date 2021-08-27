@@ -3,17 +3,19 @@
   - SERVER NAME 1
   - SERVER NAME 2
   become: true/false
+  max_fail_percentage: 35
   become_user: USERNAME
-  become_method: sudo/whatever
+  become_method: sudo/runas/su/enable
+  connection: network_cli/ssh/winrm
+  gather_facts: yes/no  ## default enable/disable in ansible.cfg   ## gathering=explicit/implicit
   strategy: debug #for debugging on the run
-  gather_facts: yes/no
   vars:
     myvars:
     - var1: value
     - var2: value
   vars_files:
-  - PATH/variale_file1
-  - PATH/variale_file1
+  - PATH/variable_file1
+  - PATH/variable_file2
   vars_prompt:
   - name: username
       prompt: "What is your username?"
@@ -23,6 +25,10 @@
   ignore_errors: true/false
   force_handlers: true/false
   serial: NUMBER OF HOSTS TO UPDATE FOR CI/CD
+  - 10%
+  - 30%
+  - 50%
+  - 100%
   pre_tasks:
   - task1:
   - task2:
@@ -37,8 +43,8 @@
   - name: TASK NAME
     include_role:
       name: ROLE_NAME
-    include_tasks: EXTERNAL_TASK_FILE
-    import_tasks: EXTERNAL_TASK_FILE
+    include_tasks: EXTERNAL_TASK_FILE.yml
+    import_tasks: EXTERNAL_TASK_FILE.yml
     module_name:
       module_option1: valu1
       module_opt1: valuppp1
@@ -48,9 +54,9 @@
       # task.args['module_option3']="value2" // added another option
       # del(task.args['module_opt1']) //delete option
       module_option2:
-    loop: "{{ some_list }}"
-    with_dict: "{{ some_dict}}"
-    with_sequence: start=0 end=5 format=testuser%02x
+    loop: "{{ some_list }}" ## "{{ some_dict | dict2items }}"  ##In case you have dictionary convert to list
+    with_dict: "{{ some_dict}}"   ## "{{ some_list | items2dict }}" ##In case you have list convert to dictionary
+    with_sequence: start=0 end=5 format=eth%x
     when:
     - condition1 or condition2
     - condition3 #LIST DESCRIBES (and) OPERATOR
@@ -80,3 +86,6 @@
     - task2: ALWAYS TASK 2
   
   
+- name: Second Play in same file
+  import_playbook: playbook_name.yml
+  ##REST same as above

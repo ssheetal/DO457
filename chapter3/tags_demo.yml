@@ -1,0 +1,32 @@
+- name: Tags Demo Playbook
+  hosts: leaf01.lab.example.com
+  tasks:
+  - name: Print Task 1  
+    debug:
+      msg: "Debug Task 1"
+    tags:
+    - test
+    - dev
+  - name: Print Task 2 
+    debug:
+      msg: "Debug Task 2"
+    tags:
+    - prod
+  - name: Print Task 3
+    debug:
+      msg: "Debug Task 3"
+    tags:
+    - always
+  - name: Print Task 4
+    debug:
+      msg: "Debug Task 4"
+  - name: Print Task 5
+    debug:
+      msg: "Debug Task 5"
+    tags:
+    - never
+  - name: Print Task 6
+    debug:
+      msg: "Debug Task 6"
+    tags:
+    - prod

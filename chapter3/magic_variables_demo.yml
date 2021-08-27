@@ -1,0 +1,10 @@
+- name: Magic Variables Playbook
+  hosts: all
+  tasks:
+
+  - name: Change Description
+    vyos_interface:
+      name: eth0
+      description: "Some_value"
+    when: inventory_hostname in group["spines"] or inventory_hostname in group["leafs"]
+
