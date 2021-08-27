@@ -5,33 +5,6 @@ Welcome to DO457 Red Hat Ansible for Network Automation
 Ansible 2.5
 Little Ansible Tower
 
-Navdeep
-
-Nav   #Deep
-
-Reading UK
-
-
-
-First 3 days Lecture/Practise		Chapter 1-4 Lecture
-Last 2 Days Only Labs			Chapter 5-6 Exercises
-
-
-
-Name
-Company/Org If possible
-Experience Linux RHCSA (cp mkdir mv rm ssh vim), Ansible, Network Devices IOS VYOS Junos
-Expectation
-Hobbies
-City/Timezone 
-Ale   		GMT-3
-David		MST
-Doug		CST	
-Fernando	Argentina
-Ken 		EST
-Michael 	CST
-Will		CST
-
 
 CS01			IOS			admin/student
 Rest4			Vyos			vyos/vyos		
