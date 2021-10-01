@@ -1,0 +1,32 @@
+- name: Subelements Demo
+  hosts: localhost
+  gather_facts: no
+  vars_files:
+  - subelements_vars.yml
+  tasks:
+  #- name: with sublements loop
+  #  debug:
+  #    #msg: "{{ item }}"
+  #    msg: "{{ item[1] }} {{ item[0].name }}"
+  #  with_subelements:
+  #  - "{{ users }}"
+  #  - mysql.hosts
+  #  #loop: "{{ users }}"
+  #  #- mysql.hosts
+  #  #- groups
+  - name: with sublements loop
+    debug:
+      msg: "{{ item[1] }} {{ item[0].name }}"
+    loop: "{{ lookup('subelements', users,'mysql.hosts') }}"
+
+
+
+#with_subelements 
+#with_list
+#with_dict
+#with_sequence
+#
+#loop: "{{ lookup('subelements' data) 
+#loop: "{{ lookup('list' data) 
+#loop: "{{ lookup('dict' data) 
+#loop: "{{ lookup('sequence' data) 

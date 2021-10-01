@@ -1,0 +1,33 @@
+- name: Task Block Demo Playbook
+  hosts: servera.lab.example.com
+  tasks:
+	-	name: First Task Outside Block
+		debug:
+        msg: "I am outside Block"	
+  -	name: Block for installing Web Server 
+		block: ## Block Starts
+    	- name: I am installing httpd
+    	  yum:
+    	    name: httpd
+    	    state: latest
+    	- name: Create file index.html
+    	  copy:
+    	    content: "Content for Ansible.\n"
+    	    dest: /var/www/html/index.html
+    	- name: Let's start httpd service
+    	  service:
+    	    name: httpd
+    	    state: started
+    when:  ansible_distribution == "RedHat" ## Block Condition
+    rescue: ## Used for rollback failed process if block task fail
+    	- name: Rollback your tasks
+      	debug:
+        	msg: "Rollback your stuff"
+    always: ## Always run whether block success or failed
+    	- name: Inform Stake Holders
+      	debug:
+        	msg: "Mail to Everyone please"
+  - name: Second Task Outside Block
+    debug:
+        msg: "I am outside Block too"
+

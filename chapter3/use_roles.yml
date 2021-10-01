@@ -11,8 +11,8 @@
     - post handler
 
   roles:
-  - role: web_server
-    some_content: "Capita Systems in Playbook\n"
+  - role: create_user
+    configure_password: "Systems_in_Playbook\n"
 
   tasks:
   - name: My Extra Task

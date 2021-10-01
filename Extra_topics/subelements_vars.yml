@@ -1,0 +1,31 @@
+users:
+  - name: alice
+    authorized:
+      - /tmp/alice/onekey.pub
+      - /tmp/alice/twokey.pub
+    mysql:
+        password: mysql-password
+        hosts:
+          - "%"
+          - "127.0.0.1"
+          - "::1"
+          - "localhost"
+        privs:
+          - "*.*:SELECT"
+          - "DB1.*:ALL"
+    groups:
+      - wheel
+  - name: bob
+    authorized:
+      - /tmp/bob/id_rsa.pub
+    mysql:
+        password: other-mysql-password
+        hosts:
+          - "db1"
+          - "db2"
+        privs:
+          - "*.*:SELECT"
+          - "DB2.*:ALL"
+    groups:
+      - group1
+      - group2
