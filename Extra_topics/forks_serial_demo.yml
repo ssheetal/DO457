@@ -1,12 +1,12 @@
 - name: Forks and Serial Demo
   hosts: all
   order: reverse_sorted
-  max_failure_percentge: 30%
+  max_fail_percentage: 30%
   vars:
     myhosts:
-    - serverb.lab.example.com
-    - serverc.lab.example.com
-    - workstation.lab.example.com
+    - leaf01
+    - spine02
+    - leaf02
 
 ####  The serial keyword specified as a percentage, which will be applied to the total number of hosts in a play, in order to determine the number of hosts per pass  ####
   serial:
