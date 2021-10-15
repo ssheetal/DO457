@@ -6,19 +6,19 @@
         msg: "I am outside Block"	
   -	name: Block for installing Web Server 
 		block: ## Block Starts
-    	- name: I am installing httpd
-    	  yum:
-    	    name: httpd
-    	    state: latest
-    	- name: Create file index.html
-    	  copy:
-    	    content: "Content for Ansible.\n"
-    	    dest: /var/www/html/index.html
-    	- name: Let's start httpd service
-    	  service:
-    	    name: httpd
-    	    state: started
-    when:  ansible_distribution == "RedHat" ## Block Condition
+      - name: label the management interface (eth0)
+        vyos_interface:
+          name: eth0
+          description: management
+      - name: set banner motd
+        vyos_banner:
+          banner: pre-login
+          test: "Unuauthorized access to this device is prohibited"
+          state: present
+      - name: Extra task in Block
+        debug:
+          msg: "Extra task"
+    when:  ansible_network_os == "vyos" ## Block Condition
     rescue: ## Used for rollback failed process if block task fail
     	- name: Rollback your tasks
       	debug:

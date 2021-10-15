@@ -1,32 +1,37 @@
 - name: Tags Demo Playbook
   hosts: leaf01.lab.example.com
   tasks:
-  - name: Print Task 1  
+  - name: Task for Dev 1  
     debug:
-      msg: "Debug Task 1"
+      msg: "Dev Task 1"
     tags:
     - test
     - dev
-  - name: Print Task 2 
+  - name: Task for Prod 
     debug:
-      msg: "Debug Task 2"
+      msg: "Prod Task 1"
     tags:
     - prod
-  - name: Print Task 3
+  - name: Task that always execute
     debug:
-      msg: "Debug Task 3"
+      msg: "Always task inform Clients"
     tags:
     - always
-  - name: Print Task 4
+  - name: Without a Tag
     debug:
-      msg: "Debug Task 4"
-  - name: Print Task 5
+      msg: "Untagged Task"
+  - name: Emergency Task
     debug:
-      msg: "Debug Task 5"
+      msg: "Destroy Datacenter"
     tags:
     - never
-  - name: Print Task 6
+  - name: Task for Dev 2
     debug:
-      msg: "Debug Task 6"
+      msg: "Dev Task 2"
+    tags:
+    - dev
+  - name: Task for Prod 2
+    debug:
+      msg: "Prod Task 2"
     tags:
     - prod

@@ -1,0 +1,25 @@
+- name: Forks and Serial Demo
+  hosts: all
+  order: reverse_sorted
+  max_failure_percentge: 30%
+  vars:
+    myhosts:
+    - serverb.lab.example.com
+    - serverc.lab.example.com
+    - workstation.lab.example.com
+
+####  The serial keyword specified as a percentage, which will be applied to the total number of hosts in a play, in order to determine the number of hosts per pass  ####
+  serial:
+  - 10%
+  - 30%
+  - 100%
+  tasks:
+  - name: Take down device from LB
+    command: sleep 4
+  - name: Update OS
+    command: sleep 4
+    failed_when: inventory_hostname in myhosts
+  - name: Update other Config
+    command: sleep 4
+  - name: Put device back to LB
+    command: sleep 4

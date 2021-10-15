@@ -1,22 +1,22 @@
 - name: Debug Strategy Playbook
-  hosts: servera.lab.example.com
+  hosts: leaf01
   strategy: debug
   tasks:
-  - name: I am installing httpd
-    yum:
-      name: httpddddd
-      state: latest
+  - name: I am setting desc
+    vyos_interface:
+      name: eth000
+      desc: "Something"
 # task.args
-# task.args['name']='httpd
+# task.args['name']='eth0'
 # task.args
 # redo
 
-  - name: Let's start httpd service
-    service:
-      name: httddddpd
-      stateeeeeee: started
+  - name: Let's set banner
+    vyos_banner:
+      banner: preeeee-login
+      textttttt: "some banner"
 # task.args
-# task.args['name']='httpd          ## value correction
-# task.args['state']='started'      ## add new option
-# del(task.args['stateeeeeee'])     ## delete current wrong option
+# task.args['banner']='pre-login'          	## value correction
+# task.args['text']='some banner'      		## add new option
+# del(task.args['textttttt'])     		## delete current wrong option
 

@@ -11,6 +11,8 @@ Little Ansible Tower
   
   Reading UK
   
+  
+  
   Name
   Company If possible
   Experience 	Network Administration IOS Juniper, Redhat Linux ( ssh vim cp mv rm mkdir find )
@@ -24,21 +26,14 @@ Little Ansible Tower
 
 
 
-
-
-
-
-
-
-
-
-
-
-
+						user/password
 CS01			IOS			admin/student
 Rest4			Vyos			vyos/vyos
 spine01-02,leaf01-02
 Server01-03		Redhat Linux		Prod Application deployed
+
+
+
 
 Chapter 1:
  
@@ -49,7 +44,7 @@ Refer Diagram
 		Free					Paid
 		Dev/Test				Production
 		Lot of time/No Money			Lot of Money/No Time
-		AWX					Ansible Tower
+		AWX(Free)				Ansible Tower
 
 Installation and subscription:
 
@@ -70,7 +65,11 @@ Documentation:
 
 ls -l /usr/lib/python2.7/site-packages/ansible/modules/
 
-Plugins:
+Module is a python script(Module) which will do activity(Changes) on Managed Hosts
+
+
+
+Plugins: Mostly Support Services
 
 Anything NOT available as module, is available as Plugin
 ansible-doc -t SOMETHING_STUPID -l //to see all plugins
@@ -143,6 +142,9 @@ Define Env Variable:	ANSIBLE_CONFIG      #=/tmp/ansible.config	Level 4
 
 
 ANSIBLE_STDOUT_CALLBACK=yaml ansible-playbook abc.yaml
+
+FLOW:
+ansible comannd -> ansible.cfg -> parameters of ansible.cfg file (e.q. inventory) ->Move on with values
 
 
 ansible.cfg is read first
@@ -298,6 +300,30 @@ ansible-playbook abc.yml --list-hosts
 ansible-playbook abc.yml --list-tasks
 ansible-playbook abc.yml --list-tags
 
+Detailed Output: Verbosity
+
+## Output Only
+ansible-playbook install_httpd.yml -v
+
+## Input and Output Only
+ansible-playbook install_httpd.yml -vv
+
+## More info Showing backgroung ansible working
+ansible-playbook install_httpd.yml -vvv
+
+## Detailed SSH Connection Information
+ansible-playbook install_httpd.yml -vvvv
+
+## Step by Step execution of playbook for better understanding
+ansible-playbook install_httpd.yml -vvv  --step
+
+## Start from specfic Task in playbook 
+ansible-playbook install_httpd.yml --start-at-task="TASK_NAME"
+
+## Limit on hosts to run playbook  from command line
+ansible-playbook install_httpd.yml --limit=host_name
+ansible-playbook install_httpd.yml -l host_name
+
 
 REGISTERED VARIABLES:
 register: variable
@@ -340,10 +366,14 @@ Role Scope:
 	A.	Group_inventory: 		inventory File_ group variable		use = symbol (if using ini format inventory)
 											[groupname:vars]
 											var1="somevalue"
-											
-	B.	Group_group_vars_folder: 	group_vars/{{groupname}}(.yml)		use : symbol
-	C.	host inventory variable		use = symbol
-	D.	host_vars/{{servername}}.yml		use : symbol
+		
+	B. 	Group_group_vars_folder: 	inventory_folder/group_vars/{{groupname}}(.yml) 		use :symbol
+	C.	Group_group_vars_folder: 	group_vars/{{groupname}}(.yml)		use : symbol
+			
+	D.	host inventory variable		use = symbol
+	E.					inventory_folder/host_vars/{{servername}}.yml		use : symbol
+	F.					host_vars/{{servername}}.yml		use : symbol
+
 
 2. 	Play Scope (Playbook)
 	A.	vars:
@@ -475,7 +505,7 @@ ansible-vault encrypt secret.yml --vault-password-file=somepass.txt		//Existing 
 ansible-vault view secret.yml							//see File ## vim will not work
 ansible-vault decrypt secret.yml --output=without_secret.yml			//decrypt File
 ansible-vault edit secret.yml							//change contents File
-ansible-vault rekey secret.yml 							//change current password to new one
+ansible-vault rekey secret.yml 		set cuc					//change current password to new one
 ansible-vault rekey secret.yml 	--vault-password-file=pass1.txt --new-vault-password-file=pass2.txt //Non-Interactive
 ansible-vault encrypt_string vyos						//Encrypt password
 
@@ -498,13 +528,18 @@ https://github.com/ansible/ansible/tree/stable-2.9/contrib/inventory
 
 
 ansible-inventory
-ansibl-inventory is NOT for converting ini to yaml, purpose is: how the final inventory look like
+ansible-inventory is NOT for converting ini to yaml, purpose is: how the final inventory look like with all its variable value
+Before running playbook, ansible-inventory  runs, create Final inventory and feeds it to playbook to run on it.
 
 ansible or ansible-playbook requires inventory. Lot of variables/Lots os scripts
 
 Final Runtime Env/hosts presented, if you want to see ansible-inventory to see final host with variables
 
+Dynamic Inventory:
 
+Active Directory, Cobbler, Redhat Satellite, VMWare, VirtualBox, Openstack, Openshift
+
+Executable Script with [chmod +x script] (Mostly Python, but can be in different Language as well)
 
 
 
@@ -535,13 +570,14 @@ Free			Paid Support
 
 
 Run a Job:		
-1. Inventory and Group/Host Variables
-2. Playbook Folder(Manual Copy/Git SCM) on Tower	:	Copy Playbooks from workstation to Tower Machine
-3. Change permission to awx:awx /var/lib/awx/projects/your_folder
-4. Project maps to your_playbook_folder (Project <-> one_folder) One to one Mapping
-5. Credentials Ansible Config
-6. Job Template (Run a playbook using inventory,credentials and some other settings)
-7. RBAC User  
+1. Organization 
+2. Inventory and Group/Host Variables
+3. Playbook Folder(Manual Copy/Git SCM) on Tower	:	Copy Playbooks from workstation to Tower Machine
+4. Change permission to awx:awx /var/lib/awx/projects/your_folder
+5. Project maps to your_playbook_folder (Project <-> one_folder) One to one Mapping
+6. Credentials Ansible Config
+7. Job Template (Run a playbook using inventory,credentials and some other settings)
+8. RBAC User  
 
 
 
@@ -613,7 +649,7 @@ ios_ping:
 dest: 172.25.250.8
 
 - name: label outside interface
-ios_interface:
+ios_interface:task files
 name: GigabitEthernet2
 description: outside
 
@@ -665,6 +701,15 @@ rescue: if there is an error on block task, it will come to rescue
 
 
 Handlers: 
+
+
+Special/Magic Variables:
+
+https://docs.ansible.com/ansible/latest/reference_appendices/special_variables.html
+
+
+
+
 
 
 
