@@ -1,0 +1,21 @@
+- name: Lookup Plugin Template Demo
+  hosts: all
+  gather_facts: yes
+  tasks:
+  - name: Print template for me
+    debug:
+      msg: "{{ query('template', 'mytempo.j2') }}"
+  #- name: Print with loop
+  #  template:
+  #    src: mytempo.j2
+  #    dest: /tmp/info
+  #  when: inventory_hostname in groups["control"]
+
+  #- name: Print with lookup plugin
+  #  debug:
+  #    msg: "{{ lookup('file', '/etc/hosts') }}"
+
+  #- name: Print with query plugin
+  #  debug:
+  #    msg: "{{ query('file', '/etc/hosts') }}"
+    

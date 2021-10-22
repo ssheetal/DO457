@@ -1,0 +1,19 @@
+- name: Lookup Plugin File Demo
+  hosts: localhost
+  gather_facts: no
+  tasks:
+
+  - name: flatten filter
+    debug:
+      msg: "{{ ( [1,2,3,[5,6]], ['a','b','c'], [[5,6,1,3], [34,'a','b','c']] ) | flatten | unique}}"
+      
+  - name: flatten lookup plugin
+    debug:
+      msg: "{{ lookup('flattened', [1,2,3,[5,6]], ['a','b','c'], [[5,6,1,3], [34,'a','b','c']]) | unique }}"
+
+
+  - name: Check both are equal
+    assert:
+      that: "{{ ( [1,2,3,[5,6]], ['a','b','c'], [[5,6,1,3], [34,'a','b','c']] ) | flatten | unique}} is eq({{ lookup('flattened', [1,2,3,[5,6]], ['a','b','c'], [[5,6,1,3], [34,'a','b','c']]) | unique }})"
+      success_msg: "Hiurray passed"
+      fail_msg: "Check Again please"

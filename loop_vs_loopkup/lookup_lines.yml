@@ -1,0 +1,17 @@
+- name: Lookup Plugin Lines Demo
+  hosts: localhost
+  gather_facts: no
+  tasks:
+  - name: Print with loop OBSOLETE
+    debug:
+      msg: "{{ item }}"
+    when: item.find('rclocal.log') != -1
+    with_lines:
+    - ls /tmp
+
+    
+  - name: Search with query plugin LEARN NEW WAY
+    debug:
+      msg: "{{ item }}"
+    loop: "{{ query('lines', 'cat /etc/hosts') }}"
+    when: item.find('utility') != -1

@@ -1,0 +1,34 @@
+- name: Lookup Plugin File Demo
+  hosts: localhost
+  gather_facts: no
+  tasks:
+
+  - name: Print with loop
+    debug:
+      msg: "{{ item }}"
+    with_file:
+    - /etc/passwd
+    - /etc/hosts
+
+  - name: Lookup file
+    debug:
+      #msg: "{{ query('lines', 'cat /etc/passwd') }}"
+      msg: "{{ query('file', '/etc/passwd1','/etc/hosts1',errors='warn') }}"
+      #msg: "{{ lookup('file', '/etc/passwd','/etc/hosts') }}"
+      
+
+  #- name: Print with lookup plugin
+  #  debug:
+  #    msg: "{{ lookup('file', '/etc/hosts','/etc/group') }}"
+
+  #- name: Print with query plugin
+  #  debug:
+  #    msg: "{{ query('file', '/etc/hosts') }}"
+  #  
+  - name: Search with query plugin
+    debug:
+      msg: "{{ item }}"
+    when: item.find('workstation') != -1
+    loop: "{{ query('lines', 'cat /etc/hosts') }}"
+    #loop: "{{ query('file', '/etc/hosts','/etc/passwd') }}"
+    #

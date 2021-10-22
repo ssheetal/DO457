@@ -6,30 +6,28 @@ Ansible 2.5
 Little Ansible Tower
 
 
-  Navdeep
-  Nav
-  
-  Reading UK
-  
-  
-  
-  Name
-  Company If possible
-  Experience 	Network Administration IOS Juniper, Redhat Linux ( ssh vim cp mv rm mkdir find )
-  Expectation
-  Hobbies
-  City Timezone	
-  
+Navdeep
+
+Nav 	#Deep
+Reading UK
 
 
 
+Name
+Company if possible
+Experience 
+	Linux(vim ssh mkdir cp mv rm cd)
+	Network
+	Ansible (NOT Required)
+Expectation
+Hobbies
+City/Timezone 
 
+							user/password
+							
+CS01				IOS			admin/student
+spine01-02,leaf01-02		Vyos			vyos/vyos
 
-
-						user/password
-CS01			IOS			admin/student
-Rest4			Vyos			vyos/vyos
-spine01-02,leaf01-02
 Server01-03		Redhat Linux		Prod Application deployed
 
 
@@ -71,7 +69,7 @@ Module is a python script(Module) which will do activity(Changes) on Managed Hos
 
 Plugins: Mostly Support Services
 
-Anything NOT available as module, is available as Plugin
+Anything NOT available as module, is available as Plugin. Plugin provides Support Infrastructure
 ansible-doc -t SOMETHING_STUPID -l //to see all plugins
 ansible-doc -t connection -l
 
@@ -99,6 +97,10 @@ Inventory:
 	Default File:	/etc/ansible/hosts
 	Custom File:	YOUR_CUSTOM_PATH
 
+Inventory groups:
+all, ungrouped as system/ansible defined default groups
+Rest are CUSTOM NAMED groups
+
 INI or YAML format:
 
 
@@ -124,6 +126,9 @@ ansible-inventory --host host
 ansible-inventory --list --yaml -i INI_inventory_file
 
 ansible -i inventory --list-hosts spine*
+
+ansible 192.168.[/2-3].[/4-8] --list-hosts -i invenotry_file_path
+
 https://stackoverflow.com/questions/33363023/is-there-any-option-to-list-groups-in-ansible#:~:text=If%20you%20just%20want%20a,the%20names%20of%20the%20groups.
 
 
@@ -175,9 +180,8 @@ connect_timeout = 100
 connect_retry_timeout = 100
 
 
-Forks vs Serial
-
-
+Forks vs Serial:
+(CI/CD Implementation)
 
 
 	forks						serial
@@ -203,7 +207,7 @@ Playbook: 4 tasks
 Forks=4		Horizontal Direction
 
 	S1	S2	S3	S4		S5	S6	S7	S8		S9 	S10
-	T1	T1	T1	T1		T1	T1	T1	T1		T1	T1
+	T1	T1	T1	T1		T1	T1	T1	T1		T1	T1	
 	T2	T2	T2	T2		T2	T2	T2	T2		T2	T2
 	T3	T3	T3	T3		T3	T3	T3	T3		T3	T3
 	T4	T4	T4	T4		T4	T4	T4	T4		T4	T4
@@ -211,15 +215,16 @@ Forks=4		Horizontal Direction
 	
 	
 	
-	
-	
-	
-	
-	
-	
 Serial: 3 
 Vertical Direction
 	S1	S2	S3			S4	S5	S6		S7	S8	S9	 	S10
+	T1	T1	T1			T1	T1	T1
+	T2	T2	T2			T2	T2	T2
+	T3	T3	T3			T3	T3	T3
+	T4	T4	T4			T4	T4	T4
+	T5	T5	T5			T5	T5	T5
+	
+	
 	T1	T1	T1			T1	T1	T1		T1	T1	T1		T1
 	T2	T2	T2			T2	T2	T2		T2	T2	T2		T2
 	T3	T3	T3			T3	T3	T3		T3	T3	T3		T3
@@ -361,10 +366,15 @@ store output of current task whch can be used as conditional output for future t
 
 
 	Chapter 3:
+Ansible Config Scope: in ansible.cfg/command line inbuild ansible paramters
+Role Scope:	In roles structure (defaults/main.yml and vars/main.yml)
+Host Scope:	Inventory where hosts are defined
+Play Scope:	In Playbook
+Global Scope:	Command Line
 
 		Scope of Variables:
-1 <  2  < 3
-Role Scope:
+Host Scope <  Play Scope  < Global Scope
+
 
 1.	Host Scope		// Inventory File , group_vars, host_vars
 
@@ -372,17 +382,15 @@ Role Scope:
 											[groupname:vars]
 											var1="somevalue"
 		
-	B. 	Group_group_vars_folder: 	inventory_folder/group_vars/{{groupname}}(.yml) 		use :symbol
-	C.	Group_group_vars_folder: 	group_vars/{{groupname}}(.yml)		use : symbol
+	B.	Group_group_vars_folder: 	group_vars/{{groupname}}(.yml)		use : symbol
 			
-	D.	host inventory variable		use = symbol
-	E.					inventory_folder/host_vars/{{servername}}.yml		use : symbol
-	F.					host_vars/{{servername}}.yml		use : symbol
+	C.	host inventory variable		use = symbol
+	D.	host_vars folder		host_vars/{{servername}}.yml		use : symbol
 
 
 2. 	Play Scope (Playbook)
 	A.	vars:
-	B. 	Vars_Prompt:	// prompt user to enter value //Interactive // Good for Dev
+	B. 	Vars_Prompt:	// prompt user to enter value //Interactive // Good for Development Env
 		
 	C.	vars_files:
 		- file_path
@@ -406,6 +414,13 @@ host_vars/
 vars_files:
 
 DICT Reverse Traverse by Defulat //Question
+
+
+Facts:
+setup module is default to collect facts works for Linux, somewhat for windows NOT for Network/others
+
+IP Filters:
+https://docs.ansible.com/ansible/latest/user_guide/playbooks_filters_ipaddr.html#playbooks-filters-ipaddr
 
 
 Roles:
@@ -457,7 +472,7 @@ mysql_setup,web_server,ip_juniper,VLAN_cisco
 2. Pre  Handlers		pre_tasks/notified_handlers
 3. Dependency Role Tasks (interface) vyos_user_role/tasks/main.yml
 4. Main Role Tasks (banner) vyos_interface_role/tasks/main.yml
-5. extra tasks in playbook	use_roles.yml tasks section> tasks
+5. extra tasks in playbook	use_roles.yml tasks section -> tasks
 6. Dependency Role Handlers	vyos_user_role/handlers/main.yml
 7. Main Role Handlers		vyos_interface_role/handlers/main.yml
 8. extra handlers involved by tasks in playbook use_roles.yml handlers section  
@@ -508,6 +523,7 @@ ansible-vault create secret.yml	--vault-password-file=somepass.txt		//new File /
 ansible-vault encrypt secret.yml						//Existing File Prompt File already Exist
 ansible-vault encrypt secret.yml --vault-password-file=somepass.txt		//Existing File from some file Non Interactive
 ansible-vault view secret.yml							//see File ## vim will not work
+ansible-vault view secret.yml 	--vault-password-file=somepass.txt		//see File ## NON Interactive
 ansible-vault decrypt secret.yml --output=without_secret.yml			//decrypt File
 ansible-vault edit secret.yml							//change contents File
 ansible-vault rekey secret.yml 		set cuc					//change current password to new one
@@ -577,6 +593,9 @@ Free			Paid Support
 Run a Job:		
 1. Organization 
 2. Inventory and Group/Host Variables
+	A. Whole Inventory
+	B. For a specfic Group
+	C. For a specific Host
 3. Playbook Folder(Manual Copy/Git SCM) on Tower	:	Copy Playbooks from workstation to Tower Machine
 4. Change permission to awx:awx /var/lib/awx/projects/your_folder
 5. Project maps to your_playbook_folder (Project <-> one_folder) One to one Mapping
@@ -584,7 +603,7 @@ Run a Job:
 7. Job Template (Run a playbook using inventory,credentials and some other settings)
 8. RBAC User  
 
-
+Vars_Prompt is NOT compatible with tower, so SURVEY needs to be used
 
 Ansible
 1. Nginx 		GUI

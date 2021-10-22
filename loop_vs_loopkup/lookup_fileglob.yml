@@ -1,0 +1,16 @@
+- name: Lookup Plugin File Demo
+  hosts: localhost
+  gather_facts: no
+  tasks:
+  - name: Print with loop
+    debug:
+      msg: "{{ item }}"
+    with_fileglob:
+    - '/var/log/*'
+
+  - name: Print with lookup plugin
+    debug:
+      msg: "{{ item }}"
+    loop: "{{ query('fileglob', '/var/log/*') }}"
+    #loop: "{{ lookup('fileglob', '/var/log/*') }}"
+

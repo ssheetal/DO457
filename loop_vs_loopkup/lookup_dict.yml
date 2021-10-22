@@ -1,0 +1,32 @@
+- name: Lookup Plugin dict Demo
+  hosts: localhost
+  gather_facts: no
+  vars:
+    mydict:
+      eth0: desc0
+      eth1: desc1
+      eth2: desc2
+      eth3: desc3
+
+  tasks:
+
+  - name: Print with_dict
+    debug:
+      msg: "{{ item }}"
+    with_dict: "{{ mydict}}"
+
+  - name: Print with Lookup dict
+    debug:
+      msg: "{{ item }}"
+    #loop: "{{ lookup('dict', mydict) }}"
+    loop: "{{ query('dict', mydict) }}"
+      
+  - name: Print with simple loop
+    debug:
+      msg: "{{ item }}"
+    loop: "{{ mydict | dict2items }}"
+
+  - name: Print with with_items
+    debug:
+      msg: "{{ item }}"
+    with_items: "{{ mydict | dict2items }}"

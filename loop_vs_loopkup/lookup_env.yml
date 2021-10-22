@@ -1,0 +1,26 @@
+- name: Lookup Plugin ENV Demo
+  hosts: servera*
+  gather_facts: no
+  tasks:
+  - name: Print ENV for me
+    debug:
+      msg: "{{ lookup('env', 'PS1', 'HOME','ENV') }}"
+
+  - name: Print ENV for me one by one
+    debug:
+      msg: "{{ item }}"
+    loop: "{{ query('env', 'PS1', 'HOME','ENV') }}"
+  #- name: Print with loop
+  #  template:
+  #    src: mytempo.j2
+  #    dest: /tmp/info
+  #  when: inventory_hostname in groups["control"]
+
+  #- name: Print with lookup plugin
+  #  debug:
+  #    msg: "{{ lookup('file', '/etc/hosts') }}"
+
+  #- name: Print with query plugin
+  #  debug:
+  #    msg: "{{ query('file', '/etc/hosts') }}"
+    

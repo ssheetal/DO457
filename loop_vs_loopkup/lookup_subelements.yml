@@ -1,0 +1,26 @@
+- name: Lookup Plugin File Demo
+  hosts: localhost
+  gather_facts: no
+  vars_files:
+  - users.yml
+  tasks:
+     
+     ## Database   Primary Key  Candidate Key
+  - name: Print with loop
+    debug:
+      msg: "{{ item.name }}"
+    with_list: "{{ users }}"
+
+
+  - name: Print with loop
+    debug:
+      msg: "{{ item.1}} {{item.0.name}}"
+      #msg: "{{ item }}"
+    with_subelements:
+    - "{{ users }}"
+    - mysql.hosts
+
+#  - name: Print with lookup plugin
+#    debug:
+#      msg: "{{ lookup('subelements', '{{users}}','mysql.hosts') }}"
+

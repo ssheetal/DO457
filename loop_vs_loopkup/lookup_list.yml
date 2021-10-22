@@ -1,0 +1,36 @@
+- name: Lookup Plugin List Demo
+  hosts: localhost
+  gather_facts: no
+  vars:
+    mylist:
+    - key: eth0
+      value: desc0
+    - key: eth1
+      value: desc1
+    - key: eth2
+      value: desc2
+    - key: eth3
+      value: desc3
+
+  tasks:
+
+  - name: Print with_list
+    debug:
+      msg: "{{ item }}"
+    with_list: "{{ mylist}}"
+
+  - name: Print with Lookup list
+    debug:
+      msg: "{{ item }}"
+    #loop: "{{ lookup('list', mylist) }}"
+    loop: "{{ query('list', mylist) | flatten }}"
+      
+  - name: Print with simple loop
+    debug:
+      msg: "{{ item }}"
+    loop: "{{ mylist }}"
+
+  - name: Print with with_items
+    debug:
+      msg: "{{ item }}"
+    with_items: "{{ mylist }}"
