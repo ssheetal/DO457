@@ -697,7 +697,7 @@ var: results.stdout
 			###### Extra Topics for Production  ########
 Tags
 	System provided tags: all,always,never,untagged
-	rest are 	med tags
+	rest are Named tags
 
 
 

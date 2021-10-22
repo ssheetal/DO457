@@ -13,7 +13,7 @@
       - name: set banner motd
         vyos_banner:
           banner: pre-login
-          test: "Unuauthorized access to this device is prohibited"
+          text: "Unuauthorized access to this device is prohibited"
           state: present
       - name: Extra task in Block
         debug:
