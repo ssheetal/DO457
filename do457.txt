@@ -5,25 +5,7 @@ Welcome to DO457 Red Hat Ansible for Network Automation
 Ansible 2.5
 Little Ansible Tower
 
-
-Navdeep
-
-Nav 	#Deep
-Reading UK
-
-
-
-Name
-Company if possible
-Experience 
-	Linux(vim ssh mkdir cp mv rm cd)
-	Network
-	Ansible (NOT Required)
-Expectation
-Hobbies
-City/Timezone 
-
-							user/password
+					user/password
 							
 CS01				IOS			admin/student
 spine01-02,leaf01-02		Vyos			vyos/vyos
