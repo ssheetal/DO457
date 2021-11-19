@@ -1,0 +1,29 @@
+- name: consolidate the layer 3 network
+  hosts: network
+  vars_files:
+  - vars/consolidation-data.yml
+
+  tasks:
+  - name: configure interface descriptions
+    vyos_interface:
+      name: "{{ item.key }}"
+      description: "{{ item.value.description }}"
+    with_dict: "{{ interface_data[inventory_hostname] }}"
+    when: ansible_network_os == 'vyos'
+
+  - name: configure layer 3
+    vyos_l3_interface:
+      aggregate: "{{ layer3_data[inventory_hostname] }}"
+    when: ansible_network_os == 'vyos'
+
+  - name: configure interface descriptions
+    ios_interface:
+      name: "{{ item.key }}"
+      description: "{{ item.value.description }}"
+    with_dict: "{{ interface_data[inventory_hostname] }}"
+    when: ansible_network_os == 'ios'
+
+  - name: configure layer 3
+    ios_l3_interface:
+      aggregate: "{{ layer3_data[inventory_hostname] }}"
+    when: ansible_network_os == 'ios'

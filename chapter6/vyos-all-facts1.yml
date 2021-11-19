@@ -1,0 +1,11 @@
+- name: gather all facts from a particular vyos machine
+	hosts: vyos
+	vars:
+		subset: all
+  tasks:
+  - name: invoke vyos_facts with gather_subset=all
+    vyos_facts:
+      gather_subset: "{{ subset }}"
+  - name: Print Facts ## Good practise
+    debug:
+      var: ansible_facts

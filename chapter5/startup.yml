@@ -1,0 +1,54 @@
+- name: define the startup example.com layer3 network
+  hosts: cs01
+  vars:
+    mgmt_intf: GigabitEthernet1
+    server_ipv4: 172.16.10.2/30
+
+  vars_files:
+  - vars/startup-data.yml
+
+  tasks:
+
+  - name: remove old layer3 interface data
+    ios_l3_interface:
+      aggregate: "{{ layer3_data[inventory_hostname] }}"
+      state: absent
+
+  - name: configure layer3 interfaces
+    ios_l3_interface:
+      aggregate: "{{ layer3_data[inventory_hostname] }}"
+
+  - name: configure description of management interface
+    # do management interface separately, do not shut down
+    ios_interface:
+      name: "{{ mgmt_intf }}"
+      description: >
+        {{ interface_data[inventory_hostname][mgmt_intf].description }}
+
+  - name: configure interface description
+    ios_interface:
+      name: "{{ item.key }}"
+      description: "{{ item.value.description }}"
+      enabled: no
+    when: not item.key == mgmt_intf
+    with_dict: "{{ interface_data[inventory_hostname] }}"
+
+  - name: bring interfaces up
+    ios_interface:
+      name: "{{ item.key }}"
+      enabled: yes
+    when: not item.key == mgmt_intf
+    with_dict: "{{ interface_data[inventory_hostname] }}"
+
+  - name: pause
+    pause:
+      seconds: 1
+
+  - name: test connectivity to server
+    ios_ping:
+      dest: "{{ server_ipv4 | ipaddr('address') }}"
+    register: result
+
+  - name: show result
+    debug:
+      var: result

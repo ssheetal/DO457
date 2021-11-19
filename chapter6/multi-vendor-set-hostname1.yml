@@ -1,0 +1,12 @@
+- name: sets hostname in a multi-vendor way
+  hosts: network
+  tasks:
+  - name: set hostname on vyos device
+    vyos_system:
+      host_name: "{{ inventory_hostname }}"
+    when: ansible_network_os == "vyos"
+
+  - name: set hostname on ios device
+    ios_system:
+      hostname: "{{ inventory_hostname }}"
+    when: ansible_network_os == "ios"

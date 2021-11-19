@@ -1,7 +1,7 @@
 - name: Task Block Demo Playbook
   hosts: spine01
   tasks:
-	-	name: First Task Outside Block
+  - name: First Task Outside Block
 		debug:
         msg: "I am outside Block"	
   -	name: Block for installing Web Server 

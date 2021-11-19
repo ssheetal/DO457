@@ -1,0 +1,4 @@
+ansible_network_os: vyos
+ansible_user: vyos
+ansible_password: vyos
+vyos_loglevel: info

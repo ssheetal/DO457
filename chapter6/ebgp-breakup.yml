@@ -1,0 +1,26 @@
+- name: configure eBGP on VyOS and IOS border routers
+  hosts: border-routers
+  vars:
+    vyos_bgp_tpl: j2/vyos-bgp.j2
+    ios_bgp_tpl: j2/ios-bgp.j2
+
+  vars_files:
+  - vars/ebgp-breakup-data.yml
+
+  tasks:
+  - name: static routes on cs01 to support non-local BGP routes
+    ios_config:
+      lines:
+      - ip route 10.10.0.0 255.255.0.0 GigabitEthernet2 172.16.2.1
+      - ip route 192.168.0.0 255.255.0.0 GigabitEthernet3 172.16.5.1
+    when: inventory_hostname == 'cs01'
+
+  - name: "map bgp data to ios device using {{ ios_bgp_tpl }}"
+    ios_config:
+      src: "{{ ios_bgp_tpl }}"
+    when: ansible_network_os == 'ios'
+
+  - name: "map bgp data to vyos device using {{ vyos_bgp_tpl }}"
+    vyos_config:
+      src: "{{ vyos_bgp_tpl }}"
+    when: ansible_network_os == 'vyos'

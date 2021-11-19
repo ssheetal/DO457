@@ -1,0 +1,16 @@
+- name: bring up an interface
+  # Required arguments: target, intf
+  hosts: "{{ target }}"
+  tasks:
+
+  - name: enable interface {{ intf }} on a VyOS box
+    vyos_interface:
+      name: "{{ intf }}"
+      enabled: True
+    when: ansible_network_os == 'vyos'
+
+  - name: enable interface {{ intf }} on an IOS box
+    ios_interface:
+      name: "{{ intf }}"
+      enabled: True
+    when: ansible_network_os == 'ios'

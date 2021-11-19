@@ -1,0 +1,10 @@
+layer3_data:
+  cs01:
+  - { name: Loopback1, ipv4: 172.16.0.1/32 }
+  - { name: GigabitEthernet4, ipv4: 172.16.10.1/30 }
+interface_data:
+  cs01:
+    GigabitEthernet1:
+      description: outside
+    GigabitEthernet4:
+      description: inside

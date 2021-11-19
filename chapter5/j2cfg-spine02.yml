@@ -1,0 +1,8 @@
+- name: play that configures spine02 using j2 template
+  hosts: spine02
+  vars:
+    j2_template: j2/vyos-configure.j2
+  tasks:
+  - name: configure {{ inventory_hostname }}
+    vyos_config:
+      src: "{{ j2_template }}"

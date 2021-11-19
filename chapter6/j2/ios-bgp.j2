@@ -1,0 +1,9 @@
+router bgp {{ bgp_data[inventory_hostname]['as'] }}
+
+{% for net in bgp_data[inventory_hostname]['networks'] %}
+network {{ net | ipaddr('network') }} mask {{ net | ipaddr('netmask') }}
+{% endfor %}
+
+{% for nei in bgp_data[inventory_hostname]['neighbors'] %}
+neighbor {{ nei['ipv4'] | ipaddr('address') }} remote-as {{ nei['as'] }}
+{% endfor %}

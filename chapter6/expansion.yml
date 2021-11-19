@@ -1,0 +1,103 @@
+- name: configure cs01 for expansion
+  hosts: cs01
+  vars_files:
+  - vars/expansion-data.yml
+  tasks:
+
+  - name: label the management interface
+    ios_interface:
+      name: GigabitEthernet1
+      description: management
+
+  - name: label the outside interface
+    ios_interface:
+      name: GigabitEthernet2
+      description: outside
+
+  - name: configure layer3 interfaces
+    ios_l3_interface:
+      aggregate: "{{ layer3_data[inventory_hostname] }}"
+
+  - name: set default gateway
+    ios_static_route:
+      prefix: 0.0.0.0
+      mask: 0.0.0.0
+      next_hop: 172.16.2.1
+
+  - name: bring the outside interface up
+    ios_interface:
+      name: GigabitEthernet2
+      enabled: yes
+
+- name: configure spine01 for expansion
+  hosts: spine01
+  vars_files:
+  - vars/expansion-data.yml
+  tasks:
+  - name: make sure ospf is not enabled
+    vyos_config:
+      lines:
+      - delete protocols ospf
+
+  - name: label the management interface (eth0)
+    vyos_interface:
+      name: eth0
+      description: management
+
+  - name: label the outside interface (eth5)
+    vyos_interface:
+      name: eth5
+      description: outside
+
+  - name: label the inside interface (eth1)
+    vyos_interface:
+      name: eth1
+      description: inside
+
+  - name: configure layer 3
+    vyos_l3_interface:
+      aggregate: "{{ layer3_data[inventory_hostname] }}"
+
+  - name: set default gateway
+    vyos_static_route:
+      prefix: 0.0.0.0
+      mask: 0
+      next_hop: 172.16.2.2
+
+  - name: add static route for server subnet
+    vyos_static_route:
+      prefix: 10.10.10.0
+      mask: 30
+      next_hop: 10.10.5.2
+
+
+- name: a play that configures leaf01 this is the expansion model
+  hosts: leaf01
+  vars_files:
+  - vars/expansion-data.yml
+  tasks:
+
+  - name: label the management interface (eth0)
+    vyos_interface:
+      name: eth0
+      description: management
+
+  - name: label the uplink interface (eth5)
+    vyos_interface:
+      name: eth5
+      description: uplink
+
+  - name: label the server interface (eth1)
+    vyos_interface:
+      name: eth1
+      description: server01
+
+  - name: configure layer3 interfaces
+    vyos_l3_interface:
+      aggregate: "{{ layer3_data[inventory_hostname] }}"
+
+  - name: set default gateway
+    vyos_static_route:
+      prefix: 0.0.0.0
+      mask: 0
+      next_hop: 10.10.5.1

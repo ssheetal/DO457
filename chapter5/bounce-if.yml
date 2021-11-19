@@ -1,0 +1,31 @@
+- name: bounce an interface (shut/no shut)
+  # Required arguments: target, intf
+  hosts: "{{ target }}"
+  tasks:
+  - name: shut interface {{ intf }} on a VyOS box
+    vyos_interface:
+      name: "{{ intf }}"
+      enabled: False
+    when: target in groups['vyos']
+
+  - name: shut interface {{ intf }} on an IOS box
+    ios_interface:
+      name: "{{ intf }}"
+      enabled: False
+    when: target in groups['ios']
+
+  - name: pause briefly before enabling interfaces
+    pause:
+      seconds: 1
+
+  - name: enable interface {{ intf }} on a VyOS box
+    vyos_interface:
+      name: "{{ intf }}"
+      enabled: True
+    when: target in groups['vyos']
+
+  - name: enable interface {{ intf }} on an IOS box
+    ios_interface:
+      name: "{{ intf }}"
+      enabled: True
+    when: target in groups['ios']

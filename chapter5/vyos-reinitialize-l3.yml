@@ -1,0 +1,75 @@
+- name: reinit layer 3 on non-mgmt ifaces of VyOS devices
+  hosts: vyos
+  vars:
+    eth_intfs: []
+    non_mgmt_eth_intfs: []
+    mgmt_intf: eth0
+  tasks:
+
+  - name: send command to show interfaces
+    vyos_command:
+      commands:
+      - show interfaces
+    register: r
+  - name: get interface rows
+    set_fact:
+      eth_intf_rows: "{{ r.stdout_lines[0]|select('search', '^eth[0-9]+.*')|list }}"
+
+  - name: append to list
+    set_fact:
+      eth_intfs: "{{ eth_intfs }} + [ '{{ item.split(' ')[0] }}' ]"
+    loop: "{{ eth_intf_rows }}"
+
+  - name: show ethernet interfaces
+    debug:
+      var: eth_intfs
+
+  - name: get non-management interfaces
+    set_fact:
+      non_mgmt_eth_intfs: "{{ non_mgmt_eth_intfs }} + [ '{{ item }}' ]"
+    loop: "{{ eth_intfs | reject('match', mgmt_intf) | list }}"
+
+  - name: show non-management ethernet interfaces
+    debug:
+      var: non_mgmt_eth_intfs
+
+  - name: remove IPv4 addresses
+    vyos_l3_interface:
+      name: "{{ item }}"
+      state: absent
+    loop: "{{ non_mgmt_eth_intfs }}"
+
+  - name: remove addresses from loopback
+    vyos_l3_interface:
+      name: lo
+      state: absent
+
+  - name: disable IPv6
+    vyos_config:
+      lines:
+      - set system ipv6 disable
+      save: True
+
+  - name: remove interface descriptions
+    vyos_interface:
+      name: "{{ item }}"
+      state: absent
+    loop: "{{ non_mgmt_eth_intfs }}"
+
+  - name: disable OSPF
+    vyos_config:
+      lines:
+      - delete protocols ospf area 0
+      save: True
+
+  - name: reboot
+    vyos_command:
+      commands:
+      - command: reboot now
+    ignore_errors: yes
+
+  - name: wait for restart
+    wait_for_connection:
+      delay: 20
+      timeout: 120
+    delegate_to: localhost

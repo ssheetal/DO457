@@ -1,0 +1,22 @@
+- name: bounce all interfaces on ios devices
+  hosts: ios
+  vars:
+    shut_template: j2/ios-if-shut-all.j2
+    no_shut_template: j2/ios-if-noshut-all.j2
+  vars_files:
+  - vars/layer3-branch-corp-cloud.yml
+  tasks:
+  - name: shut/no shut on all ios interfaces
+    ios_config:
+      src: "{{ shut_template }}"
+    when: ansible_network_os == 'ios'
+
+  - name: pause before enabling interfaces
+    pause:
+      seconds: 1
+    when: ansible_network_os == 'ios'
+
+  - name: shut/no shut on all ios interfaces
+    ios_config:
+      src: "{{ no_shut_template }}"
+    when: ansible_network_os == 'ios'

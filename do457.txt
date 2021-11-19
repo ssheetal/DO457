@@ -1,11 +1,14 @@
 
 
-Welcome to DO457 Red Hat Ansible for Network Automation
+Welcome to DO457 Red Hat Ansible for Network Automation (EX457)
 
 Ansible 2.5
 Little Ansible Tower
 
-					user/password
+Programming Knowledge NO
+Identation nano(space) vim
+
+							user/password
 							
 CS01				IOS			admin/student
 spine01-02,leaf01-02		Vyos			vyos/vyos
@@ -22,7 +25,7 @@ Refer Diagram
 		Community  				Enterprise
 		ansible.org				redhat.com
 		Free					Paid
-		Dev/Test				Production
+		Dev/Test/Learning			Production
 		Lot of time/No Money			Lot of Money/No Time
 		AWX(Free)				Ansible Tower
 
@@ -123,8 +126,8 @@ Ansible configuration File:
 ansible --version
 
 Default File:		/etc/ansible/ansible.cfg			Level 1
-User file(Home Dir):	~/.ansible.cfg					Level 2
-Project specific:	./ansible.cfg					Level 3
+User file(Home Dir):	~/.ansible.cfg					Level 2		// Hidden File
+Project specific:	./ansible.cfg					Level 3		// Current Folder
 Define Env Variable:	ANSIBLE_CONFIG      #=/tmp/ansible.config	Level 4
 
 
@@ -162,6 +165,13 @@ connect_timeout = 100
 connect_retry_timeout = 100
 
 
+Copy/paste Parameters:
+
+ansible.cfg          <-  /etc/ansible/ansible.cfg		//ask_pass
+AD-Hoc command       <-  ansible --help				// --ask-pass
+
+
+
 Forks vs Serial:
 (CI/CD Implementation)
 
@@ -189,7 +199,7 @@ Playbook: 4 tasks
 Forks=4		Horizontal Direction
 
 	S1	S2	S3	S4		S5	S6	S7	S8		S9 	S10
-	T1	T1	T1	T1		T1	T1	T1	T1		T1	T1	
+	T1	T1	T1	T1		T1	T1	T1	T1		T1	T1
 	T2	T2	T2	T2		T2	T2	T2	T2		T2	T2
 	T3	T3	T3	T3		T3	T3	T3	T3		T3	T3
 	T4	T4	T4	T4		T4	T4	T4	T4		T4	T4
@@ -197,21 +207,16 @@ Forks=4		Horizontal Direction
 	
 	
 	
+	
 Serial: 3 
 Vertical Direction
 	S1	S2	S3			S4	S5	S6		S7	S8	S9	 	S10
-	T1	T1	T1			T1	T1	T1
-	T2	T2	T2			T2	T2	T2
-	T3	T3	T3			T3	T3	T3
-	T4	T4	T4			T4	T4	T4
-	T5	T5	T5			T5	T5	T5
-	
-	
 	T1	T1	T1			T1	T1	T1		T1	T1	T1		T1
 	T2	T2	T2			T2	T2	T2		T2	T2	T2		T2
 	T3	T3	T3			T3	T3	T3		T3	T3	T3		T3
 	T4	T4	T4			T4	T4	T4		T4	T4	T4		T4
 	T5	T5	T5			T5	T5	T5		T5	T5	T5		T5
+	
 	
 
 	
@@ -270,7 +275,7 @@ Playbook: ## For more variables Refer cheat-sheet.yml
 ansible-playbook install_httpd.yml --syntax-check
 
 
-###############  Step 2:  Run Playbook in Simulation Mode (DRY RUN Or Prediction) ###############
+###############  Step 2:  Run Playbook in Simulation Mode (DRY RUN Or Prediction or Matrix Oracle) ###############
 ###############  Step 2:  This Step only check in playbook if tasks will make any changes in managed hosts or not if run in real mode ###############
 
 ansible-playbook install_httpd.yml --check
@@ -284,6 +289,18 @@ ansible-playbook install_httpd.yml -C
 
 ansible-playbook install_httpd.yml 
 
+
+Flow:
+ansible.cfg -> Knows other parameters (Inventory,esclation) -> Inventory File(Must have hosts of playbook) -> playbook
+
+Ranges:
+
+Ad-Hoc
+ansible 192.168.2.[/1-5] --list-hosts
+
+Playbook
+
+hosts: 192.168.2.[/1-5]
 
 Other Usefull ansible-playbook commands:
 
@@ -526,13 +543,11 @@ ansible-playbook secret.yml --vault-id 1@prompt --vault-id 2@prompt --vault-id 3
 
 Dynamic Inventory:
 
-Scripts are written in Python normally. bash 
-https://github.com/ansible/ansible/tree/stable-2.9/contrib/inventory
+
 
 
 ansible-inventory
-ansible-inventory is NOT for converting ini to yaml, purpose is: how the final inventory look like with all its variable value
-Before running playbook, ansible-inventory  runs, create Final inventory and feeds it to playbook to run on it.
+ansible-inventory is NOT for converting ini to yaml, purpose is: how the final inventory look like with all its final variable values Before running playbook, ansible-inventory  runs, create Final inventory and feeds it to playbook/Ad-Hoc to run on it.
 
 ansible or ansible-playbook requires inventory. Lot of variables/Lots os scripts
 
@@ -541,6 +556,10 @@ Final Runtime Env/hosts presented, if you want to see ansible-inventory to see f
 Dynamic Inventory:
 
 Active Directory, Cobbler, Redhat Satellite, VMWare, VirtualBox, Openstack, Openshift
+Scripts are written in Python normally but another language like  bash is also OK 
+
+
+https://github.com/ansible/ansible/tree/stable-2.9/contrib/inventory
 
 Executable Script with [chmod +x script] (Mostly Python, but can be in different Language as well)
 
@@ -579,7 +598,7 @@ Run a Job:
 	B. For a specfic Group
 	C. For a specific Host
 3. Playbook Folder(Manual Copy/Git SCM) on Tower	:	Copy Playbooks from workstation to Tower Machine
-4. Change permission to awx:awx /var/lib/awx/projects/your_folder
+4. Change permission to awx:awx /var/lib/awx/projects/your_folder for Manual Copy (Git will have right perm automatically)
 5. Project maps to your_playbook_folder (Project <-> one_folder) One to one Mapping
 6. Credentials Ansible Config
 7. Job Template (Run a playbook using inventory,credentials and some other settings)
@@ -677,15 +696,15 @@ var: results.stdout
 
 
 			###### Extra Topics for Production  ########
-Tags
-	System provided tags: all,always,never,untagged
-	rest are Named tags
+Tags:
+	System provided tags: 		all(default tag),always,never,untagged
+	Rest are User Named tags: 	dev, prod,test,qa
 
 
 
 
 
-Strategy
+Strategy:
 debug strategy should only be used at development stage
 
 
@@ -694,7 +713,11 @@ linear			free
 
 Linear:
 t1	t1	t1	t1
+
+
 free
+S1	S2	S3	S4
+
 t1	t1	t1	t1
 t2	t2	t2
 t3	t3	t3
@@ -703,17 +726,22 @@ t3	t3	t3
 
 
 
-Block/Rollback Demo
+Block/Rollback Demo:
+Ansible doesn't have default rollback mechanism. (Desired Configuration)
+This can be used for rollback and get the device back to original (Good last know configurations)
 
-try catch finally
-
-block rescue always
-rescue: if there is an error on block task, it will come to rescue
-
+block 
+	Actual Task
+rescue
+	Rollback the tasks in tasks section # if there is an error on block task, it will come to rescue
+always
+	Tasks which always needs to execute
+	
+try/catch/finally
 
 
 Handlers: 
-
+	Dependency tasks
 
 Special/Magic Variables:
 

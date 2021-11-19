@@ -1,0 +1,30 @@
+- name: multi-vendor play to display host name, domain name, nameservers
+  hosts: network
+  tasks:
+  - name: ios host, domain, nameserver
+    ios_command:
+      commands:
+      - sh run | include hostname
+      - sh run | include name-server
+      - sh run | include ip domain name
+    register: result
+    when: ansible_network_os == 'ios'
+
+  - name: display ios host settings
+    debug:
+      var: result.stdout
+    when: ansible_network_os == 'ios'
+
+  - name: vyos host, domain, nameserver
+    vyos_command:
+      commands:
+      - sh host name
+      - sh config| grep name-server
+      - sh host domain
+    register: result
+    when: ansible_network_os == 'vyos'
+
+  - name: display vyos host settings
+    debug:
+      var: result.stdout
+    when: ansible_network_os == 'vyos'

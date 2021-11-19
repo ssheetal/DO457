@@ -1,0 +1,6 @@
+ansible_connection: network_cli
+domain_name: lab.example.com
+syslog_ipv4: 172.25.250.254
+nameservers:
+- 8.8.8.8
+- 8.8.4.4

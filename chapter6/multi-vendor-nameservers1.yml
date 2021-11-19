@@ -1,0 +1,13 @@
+- name: sets nameservers on devices
+  hosts: network
+  tasks:
+
+  - name: set nameservers on ios devices
+    ios_system:
+      name_servers: "{{ nameservers }}" 
+    when: ansible_network_os == "ios"
+
+  - name: set nameservers on vyos devices
+    vyos_system:
+      name_servers: "{{ nameservers }}" 
+    when: ansible_network_os == "vyos"

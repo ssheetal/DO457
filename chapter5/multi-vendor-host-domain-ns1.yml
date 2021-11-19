@@ -1,0 +1,17 @@
+- name: sets host name, domain name, nameservers
+  hosts: network
+  tasks:
+  # --- host name ---
+  - name: set host name on vyos device
+    vyos_system:
+      host_name: "{{ inventory_hostname }}"
+      name_servers: "{{ nameservers }}"
+      domain_name: "{{ domain_name }}"
+    when: ansible_network_os == "vyos"
+
+  - name: set host name on ios device
+    ios_system:
+      hostname: "{{ inventory_hostname }}"
+      name_servers: "{{ nameservers }}"
+      domain_name: "{{ domain_name }}"
+    when: ansible_network_os == "ios"
