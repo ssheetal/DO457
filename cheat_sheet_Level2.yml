@@ -1,0 +1,51 @@
+- name: name of playbook
+  hosts:
+  - server name 1
+  - server name 2
+  connection: network_cli/runas/sudo/su/enable
+  become: true/false
+  become_user: username
+  become_method: sudo/whatever
+  gather_facts: yes/no
+  vars:
+    myvars:
+    - var1: value
+    - var2: value
+  vars_files:
+  - PATH/variale_file1
+  - PATH/variale_file1
+  vars_prompt:
+  - name: username
+      prompt: "What is your username?"
+      private: no
+  - name: password
+    prompt: "What is your password?"
+
+  tasks:
+  - name: task 1 name
+    module_name:
+      module_option1: value1
+      module_option2: value2
+      module_option2: value3
+    register: some_output
+  - name: task 2 name
+    module_name:
+      module_option1: value1
+      module_option2: value2
+      module_option2: value3
+    register: some_output
+
+- name: Playbook 2
+  hosts:
+  - server name 1
+  - server name 2
+  connection: network_cli/runas/sudo/su/enable
+  become: true/false
+  become_user: username
+  become_method: sudo/whatever
+  tasks:
+  - name: task 1 name
+    module_name:
+      module_option1: value1
+      module_option2: value2
+      module_option2: value3

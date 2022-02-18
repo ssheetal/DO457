@@ -8,6 +8,33 @@ Little Ansible Tower
 Programming Knowledge NO
 Identation nano(space) vim
 
+11:00 AM - 5:00 PM EST 
+Sometimes labs will be given as homework
+
+Navdeep
+
+Nav
+Deep
+
+
+Reading UK
+
+
+
+
+Name:
+Company: if possible
+Experience/Prerequisites: 
+cp mv rm mkdir vim
+Expectation:
+Timezone/city:
+Hobbies/Interesting Things:
+		
+EST  6
+CST  1
+MST  1
+
+
 							user/password
 							
 CS01				IOS			admin/student
@@ -50,7 +77,8 @@ ls -l /usr/lib/python2.7/site-packages/ansible/modules/
 
 Module is a python script(Module) which will do activity(Changes) on Managed Hosts
 
-
+Ansible Modules get copied from Control Node to Managed Hosts
+Ansible Plugins doesn't get copied, this is for support services 
 
 Plugins: Mostly Support Services
 
@@ -125,7 +153,7 @@ Ansible configuration File:
 
 ansible --version
 
-Default File:		/etc/ansible/ansible.cfg			Level 1
+Default File:		/etc/ansible/aANSIBLE_STDOUT_CALLBACK=yaml ansible-playbook abc.yamlnsible.cfg			Level 1
 User file(Home Dir):	~/.ansible.cfg					Level 2		// Hidden File
 Project specific:	./ansible.cfg					Level 3		// Current Folder
 Define Env Variable:	ANSIBLE_CONFIG      #=/tmp/ansible.config	Level 4
@@ -288,6 +316,7 @@ ansible-playbook install_httpd.yml -C
 ###############  Step 3:  Run Playbook in Real Mode ###############
 
 ansible-playbook install_httpd.yml 
+ANSIBLE_STDOUT_CALLBACK=yaml ansible-playbook abc.yaml
 
 
 Flow:
@@ -366,10 +395,13 @@ store output of current task whch can be used as conditional output for future t
 
 	Chapter 3:
 Ansible Config Scope: in ansible.cfg/command line inbuild ansible paramters
+
+	## 	Variable Scope:		##
+	
 Role Scope:	In roles structure (defaults/main.yml and vars/main.yml)
 Host Scope:	Inventory where hosts are defined
 Play Scope:	In Playbook
-Global Scope:	Command Line
+Global Scope:	Command Line  OR RUN Time
 
 		Scope of Variables:
 Host Scope <  Play Scope  < Global Scope
@@ -589,7 +621,7 @@ Free			Paid Support
 
 
 
-
+Ansible Tower is paid (AWX free community) is only for executing playbook not write a playbook 
 
 Run a Job:		
 1. Organization 
