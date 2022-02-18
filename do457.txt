@@ -8,31 +8,6 @@ Little Ansible Tower
 Programming Knowledge NO
 Identation nano(space) vim
 
-11:00 AM - 5:00 PM EST 
-Sometimes labs will be given as homework
-
-Navdeep
-
-Nav
-Deep
-
-
-Reading UK
-
-
-
-
-Name:
-Company: if possible
-Experience/Prerequisites: 
-cp mv rm mkdir vim
-Expectation:
-Timezone/city:
-Hobbies/Interesting Things:
-		
-EST  6
-CST  1
-MST  1
 
 
 							user/password
@@ -493,13 +468,13 @@ mysql_setup,web_server,ip_juniper,VLAN_cisco
 
 	3 type of roles:
 1. Private/Custom/Oraganization Roles		Local system/within Org
-2. Public Roles					ansible-galaxy
+2. Public Roles		https://github.com/navdeepsachdeva/DO457.git			ansible-galaxy
 3. Subscribed Roles				RedHat
 
 
 
 
-1. Pre  Tasks			pre_tasks/
+1. Pre  Tasks		https://github.com/navdeepsachdeva/DO457.git	pre_tasks/
 2. Pre  Handlers		pre_tasks/notified_handlers
 3. Dependency Role Tasks (interface) vyos_user_role/tasks/main.yml
 4. Main Role Tasks (banner) vyos_interface_role/tasks/main.yml
