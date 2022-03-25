@@ -620,12 +620,6 @@ Ansible
 Forks Serial Tags --limit 
 
 
-GE 194 199 205 208 212 220 223 227 232 236 240 245 252
-LAB 254
-
-
-
-
 
 
 
@@ -713,6 +707,21 @@ Tags:
 Strategy:
 debug strategy should only be used at development stage
 
+Collections:
+ ansible-galaxy collection install cisco.ios -p ./collections/
+ 
+ 
+ - name: Replace device configuration
+    cisco.ios.ios_l2_interfaces:
+      config:
+        - name: GigabitEthernet0/2
+          trunk:
+          - allowed_vlans: 20-25,40
+            native_vlan: 20
+            pruning_vlans: 10
+            encapsulation: isl
+      state: replaced
+
 
 forks=4
 linear			free
@@ -722,7 +731,17 @@ t1	t1	t1	t1
 
 
 free
-S1	S2	S3	S4
+S1	S2	S3	S4 - name: Replace device configuration
+    cisco.ios.ios_l2_interfaces:
+      config:
+        - name: GigabitEthernet0/2
+          trunk:
+          - allowed_vlans: 20-25,40
+            native_vlan: 20
+            pruning_vlans: 10
+            encapsulation: isl
+      state: replaced
+
 
 t1	t1	t1	t1
 t2	t2	t2
@@ -756,6 +775,18 @@ https://docs.ansible.com/ansible/latest/reference_appendices/special_variables.h
 
 
 
+Chapter 5:
+GE 194 199 205 208 212 220 223 227 232 236 240 245 252
+LAB 254
+
+Chapter 6:
+
+GE 263 267 270 276 283 288 292 300 308 
+LAB 311
+
+Chapter 7:
+
+LAB 318 324  329  336 342 350
 
 
 
