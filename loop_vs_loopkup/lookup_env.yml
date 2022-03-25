@@ -1,5 +1,5 @@
 - name: Lookup Plugin ENV Demo
-  hosts: servera*
+  hosts: localhost
   gather_facts: no
   tasks:
   - name: Print ENV for me

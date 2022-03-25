@@ -3,13 +3,11 @@
 Welcome to DO457 Red Hat Ansible for Network Automation (EX457)
 
 Ansible 2.5
+
 Little Ansible Tower
 
 Programming Knowledge NO
 Identation nano(space) vim
-
-
-
 							user/password
 							
 CS01				IOS			admin/student
@@ -17,8 +15,7 @@ spine01-02,leaf01-02		Vyos			vyos/vyos
 
 Server01-03		Redhat Linux		Prod Application deployed
 
-
-
+Workstation		RHEL				student/student   root/redhat student is sudo user
 
 Chapter 1:
  
@@ -137,7 +134,7 @@ Define Env Variable:	ANSIBLE_CONFIG      #=/tmp/ansible.config	Level 4
 ANSIBLE_STDOUT_CALLBACK=yaml ansible-playbook abc.yaml
 
 FLOW:
-ansible comannd -> ansible.cfg -> parameters of ansible.cfg file (e.q. inventory) ->Move on with values
+Ad-hoc command/playbook -> ansible.cfg -> parameters of ansible.cfg file (e.q. inventory, privilege escalation,vault password file ) -> ansible-inventory ->Move on with values
 
 
 ansible.cfg is read first
@@ -206,7 +203,6 @@ Forks=4		Horizontal Direction
 	T2	T2	T2	T2		T2	T2	T2	T2		T2	T2
 	T3	T3	T3	T3		T3	T3	T3	T3		T3	T3
 	T4	T4	T4	T4		T4	T4	T4	T4		T4	T4
-	T5	T5	T5	T5		T5	T5	T5	T5		T5	T5
 	
 	
 	
@@ -218,7 +214,7 @@ Vertical Direction
 	T2	T2	T2			T2	T2	T2		T2	T2	T2		T2
 	T3	T3	T3			T3	T3	T3		T3	T3	T3		T3
 	T4	T4	T4			T4	T4	T4		T4	T4	T4		T4
-	T5	T5	T5			T5	T5	T5		T5	T5	T5		T5
+	
 	
 	
 
@@ -294,8 +290,6 @@ ansible-playbook install_httpd.yml
 ANSIBLE_STDOUT_CALLBACK=yaml ansible-playbook abc.yaml
 
 
-Flow:
-ansible.cfg -> Knows other parameters (Inventory,esclation) -> Inventory File(Must have hosts of playbook) -> playbook
 
 Ranges:
 
@@ -443,38 +437,32 @@ hosts: 		// exposing inventory
 reusability
 roles based on purpose: httpd php VYOS_NETWORK juniper_user  ios_user mysql  postgresql
 
-Dev
-
-4 VYOS_SETUP
-15 OracleDatabase
-10 Netwotk_security
-11 Application Deployment
 
 web_server
 network-security
 Find_all_devices -> Prerequisites -> Networking -> Web server -> Security -> Inform_Stake_Holders
 
-Test
+Roles:
+
+defaults: 	define variables in main.yml
+vars:		define variables in main.yml but highter priority than defaults
+tasks:		TASK file, write tasks in main.yml 
+handlers:	define handlers in main.yml which will be invoked by tasks in main.yml
+meta:		Define Dependency roles
+templates:	only template files .j2
 
 
-Prod
 
-
-Web server
-FTP MYSQL ios domain IP system configuration  Update OS
-
-
-mysql_setup,web_server,ip_juniper,VLAN_cisco
 
 	3 type of roles:
 1. Private/Custom/Oraganization Roles		Local system/within Org
-2. Public Roles		https://github.com/navdeepsachdeva/DO457.git			ansible-galaxy
+2. Public Roles					ansible-galaxy
 3. Subscribed Roles				RedHat
 
 
 
 
-1. Pre  Tasks		https://github.com/navdeepsachdeva/DO457.git	pre_tasks/
+1. Pre  Tasks			pre_tasks/tasks
 2. Pre  Handlers		pre_tasks/notified_handlers
 3. Dependency Role Tasks (interface) vyos_user_role/tasks/main.yml
 4. Main Role Tasks (banner) vyos_interface_role/tasks/main.yml
@@ -497,6 +485,7 @@ ansible-playbook abc.yml --syntax-check    ## also check syntax of imported Task
 --start-at-task can be used to start execution of playbook at certain point
 Might take more time
 for Development Environment
+Can not loop for importing files
 
 include (include_tasks, include_role)
 Dynamic inclusion of tasks(you DO NOT know tasks in advance)
@@ -505,6 +494,7 @@ ansible-playbook abc.yml --syntax-check    ## DOES NOT check syntax of included 
 --start-at-task does n't work as task names are NOT known in advance
 Time efficient
 for Production Environment
+Can loop for importing files
 
 import_playbook: playbook can only be imported NOT included
 
@@ -543,7 +533,15 @@ ansible-vault encrypt_string vyos						//Encrypt password
 ansible-playbook secret.yml --ask-vault-pass				//single password on all files //Interactive
 ansible-playbook secret.yml --vault-password-file=pass1.txt		//single password on all files //Non-Interactive
 
-	//Multiple password on one file
+## Put password in ansible.cfg
+
+[defaults]
+vault_password_file=/secure_dir/pass1.txt
+
+
+ansible-playbook secret.yml
+
+	//Multiple password for playbook run with different dependent files 
 	
 ansible-playbook secret.yml --vault-id 1@prompt --vault-id 2@prompt --vault-id 3@prompt --vault-id 4@prompt
 ansible-playbook secret.yml --vault-id 1@prompt --vault-id 2@prompt --vault-id 3@pass1.txt --vault-id 4@pass2.txt
@@ -609,7 +607,7 @@ Run a Job:
 5. Project maps to your_playbook_folder (Project <-> one_folder) One to one Mapping
 6. Credentials Ansible Config
 7. Job Template (Run a playbook using inventory,credentials and some other settings)
-8. RBAC User  
+8. RBAC User (Role Based Access Control) 
 
 Vars_Prompt is NOT compatible with tower, so SURVEY needs to be used
 
@@ -622,7 +620,8 @@ Ansible
 Forks Serial Tags --limit 
 
 
-
+GE 194 199 205 208 212 220 223 227 232 236 240 245 252
+LAB 254
 
 
 
@@ -704,8 +703,8 @@ var: results.stdout
 
 			###### Extra Topics for Production  ########
 Tags:
-	System provided tags: 		all(default tag),always,never,untagged
-	Rest are User Named tags: 	dev, prod,test,qa
+	ansible provided tags: 		all(default tag),always,never,untagged
+	Rest are User Named tags: 	dev, prod,test,qa,windows,rhel,centos
 
 
 
