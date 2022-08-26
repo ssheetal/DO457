@@ -214,12 +214,12 @@ Forks vs Serial:
 (CI/CD Implementation)
 
 
-	forks						serial
-1.	ansible.cfg(default 5)				playbook
+	forks											serial
+1.	ansible.cfg(default 5)								playbook
 	ansible-plabyook a.yml --forks=4
-2.	Manage number of threads/load			control no of systems updating at same time
+2.	Manage number of threads/load					control no of systems updating at same time
 	 on control node (save Control Node)
-3.	task by task					host by host/play by play
+3.	task by task										host by host/play by play
 
 
 The serial keyword can also be specified as a percentage, which will be applied to the total number of hosts in a play, in order to determine the number of hosts per pass:
@@ -248,6 +248,7 @@ Forks=4		Horizontal Direction
 Serial: 3 
 Vertical Direction
 	S1	S2	S3			S4	S5	S6		S7	S8	S9	 	S10
+	
 	T1	T1	T1			T1	T1	T1		T1	T1	T1		T1
 	T2	T2	T2			T2	T2	T2		T2	T2	T2		T2
 	T3	T3	T3			T3	T3	T3		T3	T3	T3		T3
@@ -257,7 +258,8 @@ Vertical Direction
 	
 
 	
-	
+	Forks  >  Serial			4 > 3		No Problem
+	forks  < serial			3< 7		(Convert serial number into batches  3 +3 +1)
 	
 	forks overrise serial  or serial overrides forks  NONE
 	
@@ -663,10 +665,6 @@ Ansible
 Forks Serial Tags --limit 
 
 
-Chapter 5:
-
-GE 194 199 205 208 212 220 223 227 232 236 240 245 252
-LAB 254
 
 	ping
 ios_ping vyos_ping
@@ -816,6 +814,7 @@ Handlers:
 Special/Magic Variables:
 
 https://docs.ansible.com/ansible/latest/reference_appendices/special_variables.html
+
 
 
 
