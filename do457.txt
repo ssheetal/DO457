@@ -6,11 +6,44 @@ Ansible 2.5
 
 Little Ansible Tower
 
+
+
+
+
+		RH294			Ansible with Linux
+		DO417			Ansible with Windows Servers
+		DO457			Ansible with Network Devices  CURRENT COURSE
+
+Name:
+Org: If possible
+Experience:
+	• Experience with network administration, including a solid understanding of TCP/IP,routers, and managed switches. Students should be familiar with managing network devices from the command line, preferably with one or more of Cisco IOS, IOS XR, or NX-OS; Juniper JUNOS; Arista EOS; or VyOS.
+	• The students will work with text files and run commands in a Red Hat Enterprise Linux environment. A working knowledge of Linux, including how to edit text files and run commands from the shell, and how to use SSH to log in to remote systems. Knowledge equivalent to "Red Hat System Administration I" (RH124) or better is recommended.
+		vim cp mkdir mv rm ssh 
+	• Prior Ansible knowledge is not required.
+	
+Expectation:
+City/Timezone: 
+Hobbies:
+
+
+
+
+
+
+
 Programming Knowledge NO
 Identation nano(space) vim
+
+
+
+
 							user/password
-							
-CS01				IOS			admin/student
+
+tower		Ansible Tower student/student   root/redhat student is sudo user
+Utility		Local Github Server
+
+CS01					IOS				admin/student
 spine01-02,leaf01-02		Vyos			vyos/vyos
 
 Server01-03		Redhat Linux		Prod Application deployed
@@ -22,11 +55,11 @@ Chapter 1:
 Refer Diagram
 
 		Community  				Enterprise
-		ansible.org				redhat.com
-		Free					Paid
+		ansible.org					redhat.com
+		Free						Paid
 		Dev/Test/Learning			Production
-		Lot of time/No Money			Lot of Money/No Time
-		AWX(Free)				Ansible Tower
+		Lot of time/No Money		Lot of Money/No Time
+		AWX(Free)					Ansible Tower(Paid)
 
 Installation and subscription:
 
@@ -125,10 +158,10 @@ Ansible configuration File:
 
 ansible --version
 
-Default File:		/etc/ansible/aANSIBLE_STDOUT_CALLBACK=yaml ansible-playbook abc.yamlnsible.cfg			Level 1
-User file(Home Dir):	~/.ansible.cfg					Level 2		// Hidden File
-Project specific:	./ansible.cfg					Level 3		// Current Folder
-Define Env Variable:	ANSIBLE_CONFIG      #=/tmp/ansible.config	Level 4
+Default File:		/etc/ansible/ansible.cfg						Level 1
+User file(Home Dir):	~/.ansible.cfg							Level 2		// Hidden File
+Project specific:	./ansible.cfg									Level 3		// Current Folder
+Define Env Variable:	ANSIBLE_CONFIG =/tmp/ansible.config		Level 4
 
 
 ANSIBLE_STDOUT_CALLBACK=yaml ansible-playbook abc.yaml
@@ -163,6 +196,11 @@ gathering=implicit/explicit  //for fact gathering
 command_timeout = 180
 connect_timeout = 100
 connect_retry_timeout = 100
+
+ansible-doc -t connection network_cli
+ini               ansible.cfg
+vars	   variable file
+env             .bashrc   .bash_profile terminal based ENV variable
 
 
 Copy/paste Parameters:
@@ -417,6 +455,12 @@ DICT Reverse Traverse by Defulat //Question
 
 
 Facts:
+System value is known as FACT
+setup.py is default module for gathering facts
+setup module is used for Linux (little bit for windows)
+vyos_facts
+ios_facts
+
 setup module is default to collect facts works for Linux, somewhat for windows NOT for Network/others
 
 IP Filters:
@@ -509,28 +553,28 @@ roles_path=/path_of_roles_folder:/second_folder:/third_folder
 	Chapter 4:
 	
 	
-	140 Ansible Tower Tomorrow
 	
 Ansible Vault:
 		Create/Encrypt File:
 
-ansible-vault create secret.yml							//new File Interactive
-ansible-vault create secret.yml	--vault-password-file=somepass.txt		//new File // Non Interactive
-ansible-vault encrypt secret.yml						//Existing File Prompt File already Exist
-ansible-vault encrypt secret.yml --vault-password-file=somepass.txt		//Existing File from some file Non Interactive
-ansible-vault view secret.yml							//see File ## vim will not work
-ansible-vault view secret.yml 	--vault-password-file=somepass.txt		//see File ## NON Interactive
-ansible-vault decrypt secret.yml --output=without_secret.yml			//decrypt File
-ansible-vault edit secret.yml							//change contents File
-ansible-vault rekey secret.yml 		set cuc					//change current password to new one
-ansible-vault rekey secret.yml 	--vault-password-file=pass1.txt --new-vault-password-file=pass2.txt //Non-Interactive
-ansible-vault encrypt_string vyos						//Encrypt password
+ansible-vault create secret.yml																				//new File Interactive
+ansible-vault create secret.yml	--vault-password-file=somepass.txt												//new File // Non Interactive
+ansible-vault encrypt secret.yml																			//Existing File Prompt File already Exist
+ansible-vault encrypt secret.yml --vault-password-file=somepass.txt											//Existing File from some file Non Interactive
+ansible-vault view secret.yml																				//see File ## vim will not work
+ansible-vault view secret.yml 	--vault-password-file=somepass.txt												//see File ## NON Interactive
+ansible-vault decrypt secret.yml --output=without_secret.yml													//decrypt File
+ansible-vault edit secret.yml																				//change contents File
+ansible-vault edit secret.yml 	--vault-password-file=somepass.txt												//change contents File // Non Interactive
+ansible-vault rekey secret.yml 																				//change current password to new one
+ansible-vault rekey secret.yml 	--vault-password-file=pass1.txt --new-vault-password-file=pass2.txt 				//Non-Interactive
+ansible-vault encrypt_string vyos																			//Encrypt password
 
 
 
 		Run a Encrypted File:
 		
-ansible-playbook secret.yml --ask-vault-pass				//single password on all files //Interactive
+ansible-playbook secret.yml --ask-vault-pass					//single password on all files //Interactive
 ansible-playbook secret.yml --vault-password-file=pass1.txt		//single password on all files //Non-Interactive
 
 ## Put password in ansible.cfg
@@ -546,12 +590,11 @@ ansible-playbook secret.yml
 ansible-playbook secret.yml --vault-id 1@prompt --vault-id 2@prompt --vault-id 3@prompt --vault-id 4@prompt
 ansible-playbook secret.yml --vault-id 1@prompt --vault-id 2@prompt --vault-id 3@pass1.txt --vault-id 4@pass2.txt
 
-Dynamic Inventory:
 
 
+ansible.cfg -> ansible-inventory -> convert inventory into format that playbook understand -> then playbook/Ad-Hoc runs
 
 
-ansible-inventory
 ansible-inventory is NOT for converting ini to yaml, purpose is: how the final inventory look like with all its final variable values Before running playbook, ansible-inventory  runs, create Final inventory and feeds it to playbook/Ad-Hoc to run on it.
 
 ansible or ansible-playbook requires inventory. Lot of variables/Lots os scripts
@@ -620,8 +663,10 @@ Ansible
 Forks Serial Tags --limit 
 
 
+Chapter 5:
 
-
+GE 194 199 205 208 212 220 223 227 232 236 240 245 252
+LAB 254
 
 	ping
 ios_ping vyos_ping
