@@ -29,9 +29,6 @@ Hobbies:
 
 
 
-
-
-
 Programming Knowledge NO
 Identation nano(space) vim
 
@@ -44,7 +41,7 @@ tower		Ansible Tower student/student   root/redhat student is sudo user
 Utility		Local Github Server
 
 CS01					IOS				admin/student
-spine01-02,leaf01-02		Vyos			vyos/vyos
+spine01-02,leaf01-02			Vyos				vyos/vyos
 
 Server01-03		Redhat Linux		Prod Application deployed
 
@@ -214,12 +211,12 @@ Forks vs Serial:
 (CI/CD Implementation)
 
 
-	forks											serial
+	forks										serial
 1.	ansible.cfg(default 5)								playbook
 	ansible-plabyook a.yml --forks=4
-2.	Manage number of threads/load					control no of systems updating at same time
+2.	Manage number of threads/load							control no of systems updating at same time
 	 on control node (save Control Node)
-3.	task by task										host by host/play by play
+3.	task by task									host by host/play by play
 
 
 The serial keyword can also be specified as a percentage, which will be applied to the total number of hosts in a play, in order to determine the number of hosts per pass:
@@ -272,6 +269,7 @@ Vertical Direction
 	
 
 Actual RAM requirements vary based on how many hosts Tower will manage simultaneously (which is controlled by the forks parameter in the job template or the system ansible.cfg file). To avoid possible resource conflicts, Ansible recommends 4 GB of memory per 100 forks. For example, if forks is set to 100, 4 GB of memory is recommended; if forks is set to 400, 16 GB of memory is recommended.
+1 GB of memory per 10 forks OR 100MB per fork
 
 https://docs.ansible.com/ansible-tower/latest/html/installandreference/requirements_refguide.html	
 	
@@ -288,8 +286,13 @@ ansible spine*-m vyos_ping  -a "dest=ip-address"
 ## Setup Ansible indentation format in vim
 
 	vim ~/.vimrc
-	autocmd FileType yaml setlocal ai ts=2 sw=2 et
-	set cuc
+	autocmd FileType yaml setlocal ai ts=2 sw=2 et cuc
+	
+ai : autoindent - copy the previous line's indentation
+ts=2 : tabstop - set the number of spaces that the Tab key uses, when pressed
+sw=2 : shiftwidth - number of spaces to use with autoindent
+et : expandtab - use the space character as whitespace instead of Tab
+cuc : cursorcolumn - highlight the column the cursor is on
 
 Playbook: ## For more variables Refer cheat-sheet.yml
 
@@ -467,7 +470,7 @@ setup module is default to collect facts works for Linux, somewhat for windows N
 
 IP Filters:
 https://docs.ansible.com/ansible/latest/user_guide/playbooks_filters_ipaddr.html#playbooks-filters-ipaddr
-
+https://docs.ansible.com/ansible/latest/collections/ansible/utils/docsite/filters_ipaddr.html
 
 Roles:
 
@@ -537,7 +540,7 @@ include (include_tasks, include_role)
 Dynamic inclusion of tasks(you DO NOT know tasks in advance)
 ansible-playbook abc.yml --syntax-check    ## DOES NOT check syntax of included Task file
 4  task in external file ## Condition checked only once, if false file tasks are not included in execution of playbook
---start-at-task does n't work as task names are NOT known in advance
+--start-at-task doesn't work as task names are NOT known in advance
 Time efficient
 for Production Environment
 Can loop for importing files
@@ -559,24 +562,24 @@ roles_path=/path_of_roles_folder:/second_folder:/third_folder
 Ansible Vault:
 		Create/Encrypt File:
 
-ansible-vault create secret.yml																				//new File Interactive
-ansible-vault create secret.yml	--vault-password-file=somepass.txt												//new File // Non Interactive
-ansible-vault encrypt secret.yml																			//Existing File Prompt File already Exist
-ansible-vault encrypt secret.yml --vault-password-file=somepass.txt											//Existing File from some file Non Interactive
-ansible-vault view secret.yml																				//see File ## vim will not work
-ansible-vault view secret.yml 	--vault-password-file=somepass.txt												//see File ## NON Interactive
-ansible-vault decrypt secret.yml --output=without_secret.yml													//decrypt File
-ansible-vault edit secret.yml																				//change contents File
-ansible-vault edit secret.yml 	--vault-password-file=somepass.txt												//change contents File // Non Interactive
-ansible-vault rekey secret.yml 																				//change current password to new one
-ansible-vault rekey secret.yml 	--vault-password-file=pass1.txt --new-vault-password-file=pass2.txt 				//Non-Interactive
-ansible-vault encrypt_string vyos																			//Encrypt password
+ansible-vault create secret.yml												//new File Interactive
+ansible-vault create secret.yml	--vault-password-file=somepass.txt							//new File // Non Interactive
+ansible-vault encrypt secret.yml											//Existing File Prompt File already Exist
+ansible-vault encrypt secret.yml --vault-password-file=somepass.txt							//Existing File from some file Non Interactive
+ansible-vault view secret.yml												//see File ## vim will not work
+ansible-vault view secret.yml 	--vault-password-file=somepass.txt							//see File ## NON Interactive
+ansible-vault decrypt secret.yml --output=without_secret.yml								//decrypt File
+ansible-vault edit secret.yml												//change contents File
+ansible-vault edit secret.yml 	--vault-password-file=somepass.txt							//change contents File // Non Interactive
+ansible-vault rekey secret.yml 												//change current password to new one
+ansible-vault rekey secret.yml 	--vault-password-file=pass1.txt --new-vault-password-file=pass2.txt 			//Non-Interactive
+ansible-vault encrypt_string vyos											//Encrypt password
 
 
 
 		Run a Encrypted File:
 		
-ansible-playbook secret.yml --ask-vault-pass					//single password on all files //Interactive
+ansible-playbook secret.yml --ask-vault-pass				//single password on all files //Interactive
 ansible-playbook secret.yml --vault-password-file=pass1.txt		//single password on all files //Non-Interactive
 
 ## Put password in ansible.cfg
@@ -645,7 +648,7 @@ Run a Job:
 1. Organization 
 2. Inventory and Group/Host Variables
 	A. Whole Inventory
-	B. For a specfic Group
+	B. For a specific Group
 	C. For a specific Host
 3. Playbook Folder(Manual Copy/Git SCM) on Tower	:	Copy Playbooks from workstation to Tower Machine
 4. Change permission to awx:awx /var/lib/awx/projects/your_folder for Manual Copy (Git will have right perm automatically)
