@@ -6,7 +6,7 @@ Ansible 2.5
 
 Little Ansible Tower
 
-
+Audio/Video/Screen Share
 
 
 
@@ -19,15 +19,17 @@ Org: If possible
 Experience:
 	• Experience with network administration, including a solid understanding of TCP/IP,routers, and managed switches. Students should be familiar with managing network devices from the command line, preferably with one or more of Cisco IOS, IOS XR, or NX-OS; Juniper JUNOS; Arista EOS; or VyOS.
 	• The students will work with text files and run commands in a Red Hat Enterprise Linux environment. A working knowledge of Linux, including how to edit text files and run commands from the shell, and how to use SSH to log in to remote systems. Knowledge equivalent to "Red Hat System Administration I" (RH124) or better is recommended.
-		vim cp mkdir mv rm ssh 
+		vim(Text Editor) cp mkdir mv rm ssh
 	• Prior Ansible knowledge is not required.
 	
 Expectation:
 City/Timezone: 
 Hobbies:
 
+MST 1
+PST 2
 
-
+RH124
 
 Programming Knowledge NO
 Identation nano(space) vim
@@ -45,7 +47,7 @@ spine01-02,leaf01-02			Vyos				vyos/vyos
 
 Server01-03		Redhat Linux		Prod Application deployed
 
-Workstation		RHEL				student/student   root/redhat student is sudo user
+Workstation		RHEL			student/student   root/redhat student is sudo user
 
 Chapter 1:
  
@@ -155,16 +157,16 @@ Ansible configuration File:
 
 ansible --version
 
-Default File:		/etc/ansible/ansible.cfg						Level 1
-User file(Home Dir):	~/.ansible.cfg							Level 2		// Hidden File
-Project specific:	./ansible.cfg									Level 3		// Current Folder
+Default File:		/etc/ansible/ansible.cfg			Level 1
+User file(Home Dir):	~/.ansible.cfg					Level 2		// Hidden File
+Project specific:	./ansible.cfg					Level 3		// Current Folder
 Define Env Variable:	ANSIBLE_CONFIG =/tmp/ansible.config		Level 4
 
 
 ANSIBLE_STDOUT_CALLBACK=yaml ansible-playbook abc.yaml
 
 FLOW:
-Ad-hoc command/playbook -> ansible.cfg -> parameters of ansible.cfg file (e.q. inventory, privilege escalation,vault password file ) -> ansible-inventory ->Move on with values
+Ad-hoc command/playbook -> ansible.cfg -> parameters of ansible.cfg file (e.q. inventory, privilege escalation,vault password file, connection settings ) -> ansible-inventory ->Move on with values
 
 
 ansible.cfg is read first
@@ -245,6 +247,11 @@ Forks=4		Horizontal Direction
 Serial: 3 
 Vertical Direction
 	S1	S2	S3			S4	S5	S6		S7	S8	S9	 	S10
+wmc-Bwmc65-V65.0.0-a20b019-31552 z70
+Blue Jeans Network, Inc. © 2023
+￼
+REPORT AN ISSUE
+
 	
 	T1	T1	T1			T1	T1	T1		T1	T1	T1		T1
 	T2	T2	T2			T2	T2	T2		T2	T2	T2		T2
@@ -486,7 +493,6 @@ hosts: 		// exposing inventory
 reusability
 roles based on purpose: httpd php VYOS_NETWORK juniper_user  ios_user mysql  postgresql
 
-
 web_server
 network-security
 Find_all_devices -> Prerequisites -> Networking -> Web server -> Security -> Inform_Stake_Holders
@@ -511,16 +517,16 @@ templates:	only template files .j2
 
 
 
-1. Pre  Tasks			pre_tasks/tasks
-2. Pre  Handlers		pre_tasks/notified_handlers
-3. Dependency Role Tasks (interface) vyos_user_role/tasks/main.yml
-4. Main Role Tasks (banner) vyos_interface_role/tasks/main.yml
-5. extra tasks in playbook	use_roles.yml tasks section -> tasks
-6. Dependency Role Handlers	vyos_user_role/handlers/main.yml
-7. Main Role Handlers		vyos_interface_role/handlers/main.yml
-8. extra handlers involved by tasks in playbook use_roles.yml handlers section  
-9. Post  Tasks				post_tasks/		
-10. Post  Handlers			post_tasks/notified -> handlers
+1. Pre  Tasks							pre_tasks/tasks
+2. Pre  Handlers						pre_tasks/notified_handlers
+3. Dependency Role Tasks (interface) 				vyos_user_role/tasks/main.yml
+4. Main Role Tasks (banner) 					vyos_interface_role/tasks/main.yml
+5. extra tasks in playbook					use_roles.yml tasks section -> tasks
+6. Dependency Role Handlers					vyos_user_role/handlers/main.yml
+7. Main Role Handlers						vyos_interface_role/handlers/main.yml
+8. extra handlers involved by tasks in playbook 		use_roles.yml handlers section  
+9. Post  Tasks							post_tasks/		
+10. Post  Handlers						post_tasks/notified -> handlers
 
 
 
@@ -543,6 +549,12 @@ ansible-playbook abc.yml --syntax-check    ## DOES NOT check syntax of included 
 --start-at-task doesn't work as task names are NOT known in advance
 Time efficient
 for Production Environment
+
+
+
+role defaults (defined in role/defaults/main.yml) 1
+
+
 Can loop for importing files
 
 import_playbook: playbook can only be imported NOT included
@@ -574,8 +586,6 @@ ansible-vault edit secret.yml 	--vault-password-file=somepass.txt							//change
 ansible-vault rekey secret.yml 												//change current password to new one
 ansible-vault rekey secret.yml 	--vault-password-file=pass1.txt --new-vault-password-file=pass2.txt 			//Non-Interactive
 ansible-vault encrypt_string vyos											//Encrypt password
-
-
 
 		Run a Encrypted File:
 		
@@ -614,7 +624,7 @@ Scripts are written in Python normally but another language like  bash is also O
 
 https://github.com/ansible/ansible/tree/stable-2.9/contrib/inventory
 
-Executable Script with [chmod +x script] (Mostly Python, but can be in different Language as well)
+Executable Script with [chmod +x script] (Mostly Python, but can be in diffude or import task files.erent Language as well)
 
 
 
@@ -653,14 +663,14 @@ Run a Job:
 3. Playbook Folder(Manual Copy/Git SCM) on Tower	:	Copy Playbooks from workstation to Tower Machine
 4. Change permission to awx:awx /var/lib/awx/projects/your_folder for Manual Copy (Git will have right perm automatically)
 5. Project maps to your_playbook_folder (Project <-> one_folder) One to one Mapping
-6. Credentials Ansible Config
+6. Credentials 
 7. Job Template (Run a playbook using inventory,credentials and some other settings)
 8. RBAC User (Role Based Access Control) 
 
 Vars_Prompt is NOT compatible with tower, so SURVEY needs to be used
 
 Ansible
-1. Nginx 		GUI
+1. Nginx 		GUIude or import task files.
 2. RabbitMQ		Messaging
 3. Database		postgres
 4. supervisorctl
@@ -837,5 +847,8 @@ LAB 318 324  329  336 342 350
 
 
 
-
-
+Notes:
+[[os]]_config - set a value in "configuration mode"
+[[os]]_commands - show a value in exec mode - by def no stdout
+[[os]]_system - set a system value
+https://serverfault.com/questions/1042998/using-if-else-statement-inside-shell-module-in-ansible-playbook
