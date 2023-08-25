@@ -9,10 +9,13 @@ Little Ansible Tower
 Audio/Video/Screen Share
 
 
-
 		RH294			Ansible with Linux
 		DO417			Ansible with Windows Servers
 		DO457			Ansible with Network Devices  CURRENT COURSE
+		DO374
+		DO467
+
+
 
 Name:
 Org: If possible
@@ -20,14 +23,13 @@ Experience:
 	• Experience with network administration, including a solid understanding of TCP/IP,routers, and managed switches. Students should be familiar with managing network devices from the command line, preferably with one or more of Cisco IOS, IOS XR, or NX-OS; Juniper JUNOS; Arista EOS; or VyOS.
 	• The students will work with text files and run commands in a Red Hat Enterprise Linux environment. A working knowledge of Linux, including how to edit text files and run commands from the shell, and how to use SSH to log in to remote systems. Knowledge equivalent to "Red Hat System Administration I" (RH124) or better is recommended.
 		vim(Text Editor) cp mkdir mv rm ssh
-	• Prior Ansible knowledge is not required.
+	• Prior Ansible knowledge is not required. Ansible Tower/ Ansible Automation Platform AAP
 	
 Expectation:
 City/Timezone: 
-Hobbies:
+	
+Hobbies: 
 
-MST 1
-PST 2
 
 RH124
 
@@ -45,19 +47,20 @@ Utility		Local Github Server
 CS01					IOS				admin/student
 spine01-02,leaf01-02			Vyos				vyos/vyos
 
-Server01-03		Redhat Linux		Prod Application deployed
+Server01-03				Redhat Linux			Prod Application deployed
 
-Workstation		RHEL			student/student   root/redhat student is sudo user
+Workstation				RHEL			student/student   root/redhat student is sudo user
 
 Chapter 1:
  
 Refer Diagram
 
-		Community  				Enterprise
+		Community  					Enterprise
 		ansible.org					redhat.com
 		Free						Paid
-		Dev/Test/Learning			Production
-		Lot of time/No Money		Lot of Money/No Time
+		Dev/Test/Learning				Production
+		Not Supported					Supported	9*5 24*7
+		Lot of time/No Money				Lot of Money/No Time
 		AWX(Free)					Ansible Tower(Paid)
 
 Installation and subscription:
@@ -67,6 +70,10 @@ Installation and subscription:
 
 subscription-manager repos --enable=rhel-7-server-ansible-2-rpms
 yum install ansible
+
+		Modules						Plugin
+		python						python
+		make changes to Managed Host			Support System to ansible
 
 
 Documentation:
@@ -81,8 +88,8 @@ ls -l /usr/lib/python2.7/site-packages/ansible/modules/
 
 Module is a python script(Module) which will do activity(Changes) on Managed Hosts
 
-Ansible Modules get copied from Control Node to Managed Hosts
-Ansible Plugins doesn't get copied, this is for support services 
+Ansible Modules get copied from Control Node to Managed Hosts and make changes
+Ansible Plugins doesn't get copied, this is for support services , NO changes made by Plugin on Managed Host
 
 Plugins: Mostly Support Services
 
@@ -235,7 +242,7 @@ Playbook: 4 tasks
 ## Default forks=5
 Forks=4		Horizontal Direction
 
-	S1	S2	S3	S4		S5	S6	S7	S8		S9 	S10
+	S1	S2	S3	S4		S5	S6	S7	S8		S9 	S10	
 	T1	T1	T1	T1		T1	T1	T1	T1		T1	T1
 	T2	T2	T2	T2		T2	T2	T2	T2		T2	T2
 	T3	T3	T3	T3		T3	T3	T3	T3		T3	T3
@@ -247,12 +254,6 @@ Forks=4		Horizontal Direction
 Serial: 3 
 Vertical Direction
 	S1	S2	S3			S4	S5	S6		S7	S8	S9	 	S10
-wmc-Bwmc65-V65.0.0-a20b019-31552 z70
-Blue Jeans Network, Inc. © 2023
-￼
-REPORT AN ISSUE
-
-	
 	T1	T1	T1			T1	T1	T1		T1	T1	T1		T1
 	T2	T2	T2			T2	T2	T2		T2	T2	T2		T2
 	T3	T3	T3			T3	T3	T3		T3	T3	T3		T3
@@ -475,6 +476,10 @@ ios_facts
 
 setup module is default to collect facts works for Linux, somewhat for windows NOT for Network/others
 
+
+loops started from Ansible 2.5, before was 'with_*'
+
+
 IP Filters:
 https://docs.ansible.com/ansible/latest/user_guide/playbooks_filters_ipaddr.html#playbooks-filters-ipaddr
 https://docs.ansible.com/ansible/latest/collections/ansible/utils/docsite/filters_ipaddr.html
@@ -573,7 +578,6 @@ roles_path=/path_of_roles_folder:/second_folder:/third_folder
 	
 Ansible Vault:
 		Create/Encrypt File:
-
 ansible-vault create secret.yml												//new File Interactive
 ansible-vault create secret.yml	--vault-password-file=somepass.txt							//new File // Non Interactive
 ansible-vault encrypt secret.yml											//Existing File Prompt File already Exist
@@ -587,16 +591,13 @@ ansible-vault rekey secret.yml 												//change current password to new one
 ansible-vault rekey secret.yml 	--vault-password-file=pass1.txt --new-vault-password-file=pass2.txt 			//Non-Interactive
 ansible-vault encrypt_string vyos											//Encrypt password
 
-		Run a Encrypted File:
-		
+		Run a Encrypted File:		
 ansible-playbook secret.yml --ask-vault-pass				//single password on all files //Interactive
 ansible-playbook secret.yml --vault-password-file=pass1.txt		//single password on all files //Non-Interactive
 
 ## Put password in ansible.cfg
-
 [defaults]
 vault_password_file=/secure_dir/pass1.txt
-
 
 ansible-playbook secret.yml
 
@@ -845,6 +846,10 @@ Chapter 7:
 
 LAB 318 324  329  336 342 350
 
+
+## Install AWX/Ansible Tower on Local System ##
+
+https://github.com/ansible/awx/blob/devel/tools/docker-compose/README.md
 
 
 Notes:
